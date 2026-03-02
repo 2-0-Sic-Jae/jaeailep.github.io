@@ -1320,15 +1320,15 @@
       <div class="contact-form reveal">
         <div class="form-group">
           <label>Your Name</label>
-          <input type="text" placeholder="What shall I call you?">
+          <input type="text" id="fname" name="name" placeholder="What shall I call you?">
         </div>
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" placeholder="your@email.com">
+          <input type="email" id="femail" name="email" placeholder="your@email.com">
         </div>
         <div class="form-group">
           <label>Subject</label>
-          <select>
+          <select id="fsubject" name="subject">
             <option value="">— Select a Topic —</option>
             <option>General Inquiry</option>
             <option>Publishing / Collaboration</option>
@@ -1340,38 +1340,34 @@
         </div>
         <div class="form-group">
           <label>Message</label>
-          <textarea placeholder="Say something real..."></textarea>
+          <textarea id="fmessage" name="message" placeholder="Say something real..."></textarea>
         </div>
-        <button class="btn-submit">Send Message</button>
+        <button class="btn-submit" onclick="submitForm(event)">Send Message</button>
+        <p id="form-status" style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;margin-top:1rem;color:var(--gold);display:none;"></p>
       </div>
 
       <div class="contact-links reveal">
         <p class="contact-info-label">Find me across<br>the digital universe.</p>
         <div class="social-links">
-          <a href="#" class="social-link">
-            <span class="social-icon">𝕏</span>
-            <span class="social-name">X / Twitter</span>
-            <span class="social-handle">@JaeAilep</span>
-          </a>
-          <a href="#" class="social-link">
-            <span class="social-icon">◉</span>
-            <span class="social-name">Instagram</span>
-            <span class="social-handle">@JaeAilep</span>
-          </a>
-          <a href="#" class="social-link">
-            <span class="social-icon">▶</span>
-            <span class="social-name">YouTube</span>
-            <span class="social-handle">Jae Ailep</span>
-          </a>
-          <a href="#" class="social-link">
+          <a href="https://www.tiktok.com/@Presidential_1.Jae" target="_blank" class="social-link">
             <span class="social-icon">◈</span>
             <span class="social-name">TikTok</span>
-            <span class="social-handle">@JaeAilep</span>
+            <span class="social-handle">@Presidential_1.Jae</span>
           </a>
-          <a href="#" class="social-link">
-            <span class="social-icon">◆</span>
-            <span class="social-name">Patreon</span>
-            <span class="social-handle">Jae Ailep</span>
+          <a href="https://www.instagram.com/Presidential_1_" target="_blank" class="social-link">
+            <span class="social-icon">◉</span>
+            <span class="social-name">Instagram</span>
+            <span class="social-handle">@Presidential_1_</span>
+          </a>
+          <a href="https://www.instagram.com/Jaes_20Sic.Cutz" target="_blank" class="social-link">
+            <span class="social-icon">◉</span>
+            <span class="social-name">Instagram — Cuts</span>
+            <span class="social-handle">@Jaes_20Sic.Cutz</span>
+          </a>
+          <a href="https://www.youtube.com/@Way20Sic" target="_blank" class="social-link">
+            <span class="social-icon">▶</span>
+            <span class="social-name">YouTube</span>
+            <span class="social-handle">Way 20Sic</span>
           </a>
         </div>
       </div>
@@ -1473,6 +1469,49 @@
     document.querySelectorAll('.work-item').forEach(item => {
       item.style.display = (type === 'all' || item.dataset.type === type) ? 'block' : 'none';
     });
+  }
+
+  // Formspree Contact Form
+  async function submitForm(e) {
+    e.preventDefault();
+    const status = document.getElementById('form-status');
+    const btn = e.target;
+    const data = {
+      name: document.getElementById('fname').value,
+      email: document.getElementById('femail').value,
+      subject: document.getElementById('fsubject').value,
+      message: document.getElementById('fmessage').value
+    };
+    if (!data.name || !data.email || !data.message) {
+      status.style.display = 'block';
+      status.style.color = 'var(--crimson)';
+      status.textContent = 'Please fill in your name, email and message.';
+      return;
+    }
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('https://formspree.io/f/xdalrnoz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        status.style.display = 'block';
+        status.style.color = 'var(--gold)';
+        status.textContent = 'Message received. I will be in touch.';
+        document.getElementById('fname').value = '';
+        document.getElementById('femail').value = '';
+        document.getElementById('fsubject').value = '';
+        document.getElementById('fmessage').value = '';
+      } else { throw new Error(); }
+    } catch {
+      status.style.display = 'block';
+      status.style.color = 'var(--crimson)';
+      status.textContent = 'Something went wrong. Try again.';
+    }
+    btn.textContent = 'Send Message';
+    btn.disabled = false;
   }
 
   // Scroll reveal
