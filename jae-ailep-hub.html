@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAE AILEP — Creative Universe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0806;
+    --paper: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-dim: #8a6d2f;
+    --crimson: #8b1a1a;
+    --cosmic: #1a0a2e;
+    --nebula: #4a1a6e;
+    --ice: #a8d8ea;
+    --white: #faf8f5;
+    --gray: #3a3530;
+    --gray-mid: #6b6560;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--white);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    opacity: 0.6;
+  }
+
+  /* Grain Overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.35;
+  }
+
+  /* ═══════════════════════════════════
+     HERO
+  ═══════════════════════════════════ */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 20% 50%, #1a0a2e 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, #2a0a0a 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, #0a1a0a 0%, transparent 50%),
+                var(--ink);
+  }
+
+  /* Stars */
+  .stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) infinite alternate;
+    opacity: var(--op, 0.6);
+  }
+  @keyframes twinkle {
+    from { opacity: var(--op, 0.6); transform: scale(1); }
+    to { opacity: calc(var(--op, 0.6) * 0.2); transform: scale(0.5); }
+  }
+
+  /* Ink drip lines */
+  .ink-lines {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0.06;
+  }
+  .ink-line {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    animation: drift var(--d, 8s) infinite alternate ease-in-out;
+  }
+  @keyframes drift {
+    from { transform: translateY(-10px) scaleY(0.95); }
+    to { transform: translateY(10px) scaleY(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 18vw, 14rem);
+    line-height: 0.85;
+    letter-spacing: 0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--white);
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.5s forwards;
+  }
+  .hero-name .filled {
+    color: var(--white);
+    -webkit-text-stroke: 0;
+  }
+  .hero-name .gold {
+    color: var(--gold);
+    -webkit-text-stroke: 0;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    color: var(--gray-mid);
+    margin-top: 1.5rem;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    animation: fadeUp 1s 0.8s forwards;
+  }
+
+  .hero-divider {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 2rem auto;
+    opacity: 0;
+    animation: fadeUp 1s 1s forwards;
+  }
+
+  .hero-tagline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.8s forwards;
+  }
+  .scroll-hint span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--gray-mid);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollDrop 2s infinite;
+  }
+  @keyframes scrollDrop {
+    0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ═══════════════════════════════════
+     NAV
+  ═══════════════════════════════════ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,8,6,0.9), transparent);
+    backdrop-filter: blur(0px);
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(10,8,6,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gray-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 1px;
+    background: var(--gold);
+    transition: all 0.3s;
+  }
+
+  /* ═══════════════════════════════════
+     SECTIONS COMMON
+  ═══════════════════════════════════ */
+  section {
+    padding: 8rem 2rem;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .section-title em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .max-w {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ═══════════════════════════════════
+     UPDATES / BLOG
+  ═══════════════════════════════════ */
+  #updates {
+    background: linear-gradient(to bottom, var(--ink), #0f0c0a);
+  }
+
+  .updates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 4rem;
+  }
+
+  .update-card {
+    position: relative;
+    padding: 3rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(201,168,76,0.08);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    group: true;
+  }
+  .update-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .update-card:hover {
+    border-color: rgba(201,168,76,0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .update-card:hover::before { opacity: 1; }
+
+  .update-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    background: rgba(201,168,76,0.04);
+    border-color: rgba(201,168,76,0.2);
+  }
+
+  .card-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .card-tag {
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-dim);
+    border-radius: 0px;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .update-card.featured .card-title {
+    font-size: clamp(1.8rem, 3vw, 3rem);
+  }
+
+  .card-excerpt {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--gray-mid);
+    font-style: italic;
+  }
+
+  .card-arrow {
+    position: absolute;
+    bottom: 2rem; right: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    opacity: 0;
+    transition: all 0.3s;
+    transform: translateX(-10px);
+  }
+  .update-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .featured-visual {
+    height: 300px;
+    background: linear-gradient(135deg, var(--cosmic), var(--nebula), var(--crimson));
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .featured-visual::after {
+    content: '新';
+    font-family: 'Noto Serif JP', serif;
+    font-size: 8rem;
+    color: rgba(255,255,255,0.05);
+    position: absolute;
+  }
+  .featured-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ═══════════════════════════════════
+     WORKS
+  ═══════════════════════════════════ */
+  #works {
+    background: #0f0c0a;
+  }
+
+  .works-categories {
+    display: flex;
+    gap: 0;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    overflow-x: auto;
+  }
+  .cat-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    padding: 1rem 2rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  .cat-btn.active, .cat-btn:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .work-item {
+    position: relative;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    cursor: pointer;
+    background: #1a1510;
+    border: 1px solid rgba(255,255,255,0.04);
+    transition: all 0.4s ease;
+  }
+  .work-item:hover {
+    border-color: rgba(201,168,76,0.3);
+    transform: scale(1.02);
+  }
+
+  .work-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: linear-gradient(160deg, var(--bg1, #1a0a2e), var(--bg2, #0a1a2e));
+  }
+  .work-icon {
+    font-size: 2.5rem;
+    opacity: 0.4;
+  }
+  .work-type-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+
+  .work-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(10,8,6,0.95), transparent);
+    transform: translateY(60%);
+    transition: transform 0.4s ease;
+  }
+  .work-item:hover .work-info { transform: translateY(0); }
+
+  .work-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+  .work-genre {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .coming-soon-badge {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.45rem;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 0.3rem 0.6rem;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════
+     ABOUT
+  ═══════════════════════════════════ */
+  #about {
+    background: radial-gradient(ellipse at 80% 50%, rgba(26,10,46,0.5) 0%, transparent 60%), #0a0806;
+    overflow: hidden;
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .about-portrait {
+    position: relative;
+    aspect-ratio: 3/4;
+    max-width: 420px;
+  }
+  .portrait-frame {
+    width: 100%; height: 100%;
+    background: linear-gradient(160deg, var(--cosmic), var(--nebula) 40%, var(--crimson) 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portrait-initials {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: rgba(255,255,255,0.08);
+    letter-spacing: 0.05em;
+    z-index: 1;
+  }
+  .portrait-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(10,8,6,0.8));
+  }
+  .portrait-border {
+    position: absolute;
+    top: 1.5rem; left: 1.5rem;
+    right: -1.5rem; bottom: -1.5rem;
+    border: 1px solid rgba(201,168,76,0.3);
+    z-index: -1;
+  }
+
+  .about-text .section-label { margin-bottom: 1.5rem; }
+  .about-bio {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: var(--gray-mid);
+    margin-bottom: 1.5rem;
+  }
+  .about-bio strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════
+     UNIVERSE MAP (Categories Showcase)
+  ═══════════════════════════════════ */
+  #universe {
+    background: var(--ink);
+    overflow: hidden;
+    padding: 8rem 2rem;
+  }
+
+  .universe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 1px;
+    margin-top: 4rem;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.08);
+  }
+
+  .universe-cell {
+    padding: 3rem 2rem;
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.4s;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 200px;
+  }
+  .universe-cell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--cell-color, rgba(201,168,76,0.05));
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .universe-cell:hover { background: rgba(201,168,76,0.03); }
+  .universe-cell:hover::before { opacity: 1; }
+
+  .universe-cell.wide { grid-column: span 2; }
+  .universe-cell.tall { grid-row: span 2; }
+
+  .cell-icon {
+    font-size: 2rem;
+    opacity: 0.7;
+  }
+  .cell-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+  .cell-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--gray-mid);
+    line-height: 1.6;
+  }
+  .cell-count {
+    margin-top: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.25em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════
+     CONTACT
+  ═══════════════════════════════════ */
+  #contact {
+    background: linear-gradient(to bottom, #0a0806, var(--cosmic));
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    margin-top: 4rem;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .form-group label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--white);
+    padding: 1rem 1.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    resize: none;
+    appearance: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: rgba(201,168,76,0.5);
+    background: rgba(201,168,76,0.03);
+  }
+  .form-group select option { background: #1a1510; }
+  .form-group textarea { min-height: 140px; }
+
+  .btn-submit {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 1.2rem 3rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    align-self: flex-start;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+    opacity: 0.2;
+  }
+  .btn-submit:hover::after { transform: translateX(0); }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .contact-info-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--gray-mid);
+    margin-bottom: 1rem;
+  }
+
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid rgba(201,168,76,0.1);
+    color: var(--white);
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .social-link::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform 0.3s;
+  }
+  .social-link:hover {
+    background: rgba(201,168,76,0.05);
+    border-color: rgba(201,168,76,0.3);
+  }
+  .social-link:hover::before { transform: scaleY(1); }
+  .social-icon { font-size: 1.2rem; }
+  .social-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .social-handle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    color: var(--gray-mid);
+    margin-left: auto;
+  }
+
+  /* ═══════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════ */
+  footer {
+    background: #050403;
+    padding: 4rem 2rem 2rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    opacity: 0.4;
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--gray-mid);
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════
+     MOBILE NAV MENU
+  ═══════════════════════════════════ */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,8,6,0.98);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    backdrop-filter: blur(20px);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-close {
+    position: absolute;
+    top: 2rem; right: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+
+  /* ═══════════════════════════════════
+     REVEAL ANIMATION
+  ═══════════════════════════════════ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ═══════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════ */
+  @media (max-width: 900px) {
+    nav { padding: 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .updates-grid { grid-template-columns: 1fr; }
+    .update-card.featured {
+      grid-template-columns: 1fr;
+    }
+    .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .about-portrait { max-width: 280px; }
+    .universe-grid { grid-template-columns: repeat(2, 1fr); }
+    .universe-cell.wide { grid-column: span 1; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .works-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    section { padding: 5rem 1.2rem; }
+    .universe-grid { grid-template-columns: 1fr; }
+    .works-grid { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">✕ CLOSE</button>
+  <a href="#updates" onclick="toggleMenu()">Updates</a>
+  <a href="#works" onclick="toggleMenu()">Works</a>
+  <a href="#universe" onclick="toggleMenu()">Universe</a>
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- Navigation -->
+<nav id="nav">
+  <a href="#" class="nav-logo">JAE AILEP</a>
+  <ul class="nav-links">
+    <li><a href="#updates">Updates</a></li>
+    <li><a href="#works">Works</a></li>
+    <li><a href="#universe">Universe</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+  <!-- Ink Lines -->
+  <div class="ink-lines" id="inkLines"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">— The Official Creative Universe of —</p>
+    <h1 class="hero-name">
+      <span class="filled">JAE</span><br>
+      <span class="gold">AILEP</span>
+    </h1>
+    <p class="hero-subtitle">Author · Manga-ka · Filmmaker · Storyteller</p>
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">書く世界　描く夢　語る魂</p>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- UPDATES / BLOG -->
+<section id="updates">
+  <div class="max-w">
+    <p class="section-label reveal">Latest Transmissions</p>
+    <h2 class="section-title reveal">Updates &<br><em>Announcements</em></h2>
+
+    <div class="updates-grid">
+
+      <!-- Featured Post -->
+      <div class="update-card featured reveal">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">Announcement</span>
+            <span>February 2026</span>
+          </div>
+          <h3 class="card-title">Welcome to the Official Jae Ailep Creative Hub</h3>
+          <p class="card-excerpt">
+            This is the beginning. One universe. Every story — novels, manga, anime, films, poetry,
+            and worlds yet unnamed. Everything created by Jae Ailep lives here.
+            Bookmark this. Tell no one. Or tell everyone.
+          </p>
+        </div>
+        <div class="featured-visual">
+          <span class="featured-label">The Universe Begins</span>
+        </div>
+        <span class="card-arrow">Read More →</span>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="update-card reveal">
+        <div class="card-meta">
+          <span class="card-tag">Books</span>
+          <span>Coming Soon</span>
+        </div>
+        <h3 class="card-title">First Novel: Title Reveal Coming</h3>
+        <p class="card-excerpt">The first full-length novel is in progress. Details will be announced exclusively here first.</p>
+        <span class="card-arrow">Read More →</span>
+      </div>
+
+      <!-- Post 3 -->
+      <div class="update-card reveal">
+        <div class="card-meta">
+          <span class="card-tag">Manga</span>
+          <span>In Development</span>
+        </div>
+        <h3 class="card-title">Original Manga Series in the Works</h3>
+        <p class="card-excerpt">A new manga series is being developed. Genre, premise, and first chapter previews will drop here.</p>
+        <span class="card-arrow">Read More →</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="max-w">
+    <p class="section-label reveal">The Catalog</p>
+    <h2 class="section-title reveal">The <em>Works</em></h2>
+
+    <div class="works-categories reveal">
+      <button class="cat-btn active" onclick="filterWorks(this, 'all')">All</button>
+      <button class="cat-btn" onclick="filterWorks(this, 'novel')">Novels</button>
+      <button class="cat-btn" onclick="filterWorks(this, 'manga')">Manga</button>
+      <button class="cat-btn" onclick="filterWorks(this, 'light-novel')">Light Novels</button>
+      <button class="cat-btn" onclick="filterWorks(this, 'poetry')">Poetry</button>
+      <button class="cat-btn" onclick="filterWorks(this, 'anime')">Anime</button>
+      <button class="cat-btn" onclick="filterWorks(this, 'film')">Film</button>
+      <button class="cat-btn" onclick="filterWorks(this, 'comics')">Comics</button>
+    </div>
+
+    <div class="works-grid reveal" id="worksGrid">
+
+      <div class="work-item" data-type="novel">
+        <div class="work-placeholder" style="--bg1:#1a0a1e;--bg2:#0a0a2e;">
+          <span class="work-icon">📖</span>
+          <span class="work-type-label">Novel</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Novel I</div>
+          <div class="work-genre">Novel · In Progress</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <div class="work-item" data-type="manga">
+        <div class="work-placeholder" style="--bg1:#1a0a0a;--bg2:#2a0a1e;">
+          <span class="work-icon">🖤</span>
+          <span class="work-type-label">Manga</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Manga Series</div>
+          <div class="work-genre">Manga · In Development</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <div class="work-item" data-type="light-novel">
+        <div class="work-placeholder" style="--bg1:#0a1a0a;--bg2:#0a2a1a;">
+          <span class="work-icon">🌙</span>
+          <span class="work-type-label">Light Novel</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Light Novel</div>
+          <div class="work-genre">Light Novel · In Progress</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <div class="work-item" data-type="poetry">
+        <div class="work-placeholder" style="--bg1:#1a1a0a;--bg2:#2a1a0a;">
+          <span class="work-icon">✦</span>
+          <span class="work-type-label">Poetry</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Poetry Collection</div>
+          <div class="work-genre">Poetry · In Progress</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <div class="work-item" data-type="anime">
+        <div class="work-placeholder" style="--bg1:#0a0a2e;--bg2:#1a0a2e;">
+          <span class="work-icon">⛩</span>
+          <span class="work-type-label">Anime</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Anime Project</div>
+          <div class="work-genre">Anime · Concept Stage</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <div class="work-item" data-type="film">
+        <div class="work-placeholder" style="--bg1:#1a0a0a;--bg2:#0a0a0a;">
+          <span class="work-icon">🎬</span>
+          <span class="work-type-label">Film</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Film</div>
+          <div class="work-genre">Film · Pre-Production</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <div class="work-item" data-type="comics">
+        <div class="work-placeholder" style="--bg1:#0a1a1a;--bg2:#0a2a2a;">
+          <span class="work-icon">🖊</span>
+          <span class="work-type-label">Comics</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Comics Series</div>
+          <div class="work-genre">Comics · Concept Stage</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <div class="work-item" data-type="film">
+        <div class="work-placeholder" style="--bg1:#1a1a1a;--bg2:#0a0a1a;">
+          <span class="work-icon">🎞</span>
+          <span class="work-type-label">Documentary</span>
+        </div>
+        <div class="work-info">
+          <div class="work-title">Untitled Documentary</div>
+          <div class="work-genre">Documentary · Concept Stage</div>
+        </div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSE MAP -->
+<section id="universe">
+  <div class="max-w">
+    <p class="section-label reveal">What Lives Here</p>
+    <h2 class="section-title reveal">The <em>Universe</em></h2>
+
+    <div class="universe-grid reveal">
+      <div class="universe-cell wide" style="--cell-color:rgba(138,26,106,0.1)">
+        <span class="cell-icon">⛩</span>
+        <span class="cell-name">Anime & Animation</span>
+        <span class="cell-desc">Original anime shorts, episodes, and full-length films — streaming directly from this hub.</span>
+        <span class="cell-count">Shorts · Episodes · Movies</span>
+      </div>
+      <div class="universe-cell" style="--cell-color:rgba(26,58,138,0.1)">
+        <span class="cell-icon">📖</span>
+        <span class="cell-name">Novels & Light Novels</span>
+        <span class="cell-desc">Original fiction, self-published and distributed here first.</span>
+        <span class="cell-count">Read & Purchase</span>
+      </div>
+      <div class="universe-cell" style="--cell-color:rgba(138,26,26,0.1)">
+        <span class="cell-icon">🖤</span>
+        <span class="cell-name">Manga</span>
+        <span class="cell-desc">Original manga series drawn and written by Jae Ailep.</span>
+        <span class="cell-count">Read Online · Download</span>
+      </div>
+      <div class="universe-cell" style="--cell-color:rgba(26,138,86,0.1)">
+        <span class="cell-icon">✦</span>
+        <span class="cell-name">Poetry</span>
+        <span class="cell-desc">Collections, individual pieces, and experimental forms.</span>
+        <span class="cell-count">Read · Collect</span>
+      </div>
+      <div class="universe-cell" style="--cell-color:rgba(138,100,26,0.1)">
+        <span class="cell-icon">🎬</span>
+        <span class="cell-name">Film & Documentary</span>
+        <span class="cell-desc">Short films, series, documentaries, and feature-length films.</span>
+        <span class="cell-count">Watch Here</span>
+      </div>
+      <div class="universe-cell" style="--cell-color:rgba(100,26,138,0.1)">
+        <span class="cell-icon">🖊</span>
+        <span class="cell-name">Comics</span>
+        <span class="cell-desc">Full-color and black-and-white original comic series.</span>
+        <span class="cell-count">Read · Download</span>
+      </div>
+      <div class="universe-cell wide" style="--cell-color:rgba(138,26,26,0.08)">
+        <span class="cell-icon">📡</span>
+        <span class="cell-name">Updates & The Blog</span>
+        <span class="cell-desc">Behind-the-scenes. Process notes. Announcements. Thoughts. This is the signal.</span>
+        <span class="cell-count">Subscribe · Follow</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="max-w">
+    <div class="about-layout">
+      <div class="about-portrait reveal">
+        <div class="portrait-frame">
+          <span class="portrait-initials">JA</span>
+        </div>
+        <div class="portrait-border"></div>
+      </div>
+      <div class="about-text">
+        <p class="section-label reveal">The Creator</p>
+        <h2 class="section-title reveal">Jae<br><em>Ailep</em></h2>
+        <p class="about-bio reveal">
+          Born <strong>Jae-Mier Ailep</strong> — a writer, visual storyteller, filmmaker,
+          and world-builder operating at the intersection of every art form that has ever mattered.
+        </p>
+        <p class="about-bio reveal">
+          Novels. Manga. Anime. Films. Poetry. Comics. Documentaries. Series.
+          Everything originates from one mind, one vision, one relentless creative impulse.
+          This website is the <strong>central hub</strong> — the home base for every work,
+          every update, every universe created under the name Jae Ailep.
+        </p>
+        <p class="about-bio reveal">
+          The work speaks first. The name follows.
+        </p>
+        <div class="about-stats reveal">
+          <div>
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Stories to Tell</div>
+          </div>
+          <div>
+            <div class="stat-num">1</div>
+            <div class="stat-label">Universe</div>
+          </div>
+          <div>
+            <div class="stat-num">Now</div>
+            <div class="stat-label">It Begins</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="max-w">
+    <p class="section-label reveal">Reach Out</p>
+    <h2 class="section-title reveal">Get in<br><em>Contact</em></h2>
+
+    <div class="contact-layout">
+      <div class="contact-form reveal">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="What shall I call you?">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select>
+            <option value="">— Select a Topic —</option>
+            <option>General Inquiry</option>
+            <option>Publishing / Collaboration</option>
+            <option>Licensing / Rights</option>
+            <option>Press / Media</option>
+            <option>Fan Message</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Say something real..."></textarea>
+        </div>
+        <button class="btn-submit">Send Message</button>
+      </div>
+
+      <div class="contact-links reveal">
+        <p class="contact-info-label">Find me across<br>the digital universe.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">
+            <span class="social-icon">𝕏</span>
+            <span class="social-name">X / Twitter</span>
+            <span class="social-handle">@JaeAilep</span>
+          </a>
+          <a href="#" class="social-link">
+            <span class="social-icon">◉</span>
+            <span class="social-name">Instagram</span>
+            <span class="social-handle">@JaeAilep</span>
+          </a>
+          <a href="#" class="social-link">
+            <span class="social-icon">▶</span>
+            <span class="social-name">YouTube</span>
+            <span class="social-handle">Jae Ailep</span>
+          </a>
+          <a href="#" class="social-link">
+            <span class="social-icon">◈</span>
+            <span class="social-name">TikTok</span>
+            <span class="social-handle">@JaeAilep</span>
+          </a>
+          <a href="#" class="social-link">
+            <span class="social-icon">◆</span>
+            <span class="social-name">Patreon</span>
+            <span class="social-handle">Jae Ailep</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">JAE AILEP</div>
+    <p class="footer-copy">
+      © 2026 Jae-Mier Ailep / Jae Ailep — All Rights Reserved<br>
+      All works, stories, characters, and universes are original intellectual property of Jae Ailep.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 4 + 'px';
+    cursor.style.top = my - 4 + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 16 + 'px';
+    ring.style.top = ry - 16 + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .work-item, .update-card, .universe-cell').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      ring.style.transform = 'scale(1.5)';
+      ring.style.opacity = '1';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+      ring.style.opacity = '0.6';
+    });
+  });
+
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 180; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${size}px;
+      height:${size}px;
+      --op:${Math.random()*0.7+0.1};
+      --dur:${Math.random()*4+2}s;
+      animation-delay:${Math.random()*4}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Ink Lines
+  const linesEl = document.getElementById('inkLines');
+  for (let i = 0; i < 12; i++) {
+    const l = document.createElement('div');
+    l.className = 'ink-line';
+    l.style.cssText = `
+      left:${(i/12)*100}%;
+      --d:${Math.random()*6+5}s;
+      animation-delay:${Math.random()*4}s;
+      opacity:${Math.random()*0.3};
+    `;
+    linesEl.appendChild(l);
+  }
+
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // Works filter
+  function filterWorks(btn, type) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.work-item').forEach(item => {
+      item.style.display = (type === 'all' || item.dataset.type === type) ? 'block' : 'none';
+    });
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
