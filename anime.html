@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime — JAE AILEP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0a0806;--gold:#c9a84c;--gold-dim:#8a6d2f;--crimson:#8b1a1a;--cosmic:#1a0a2e;--nebula:#4a1a6e;--white:#faf8f5;--gray-mid:#6b6560;}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--ink);color:var(--white);font-family:'Cormorant Garamond',serif;overflow-x:hidden;cursor:none;}
+  .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.1s;mix-blend-mode:difference;}
+  .cursor-ring{position:fixed;width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.15s;opacity:0.6;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9997;opacity:0.35;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(10,8,6,0.9),transparent);transition:all 0.4s;}
+  nav.scrolled{background:rgba(10,8,6,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.15);}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.1em;color:var(--gold);text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--gray-mid);text-decoration:none;text-transform:uppercase;transition:color 0.3s;position:relative;}
+  .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+  .nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+  .hamburger span{display:block;width:24px;height:1px;background:var(--gold);transition:all 0.3s;}
+  .mobile-menu{position:fixed;inset:0;background:rgba(10,8,6,0.98);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:3rem;backdrop-filter:blur(20px);}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:0.05em;color:var(--white);text-decoration:none;transition:color 0.3s;}
+  .mobile-menu a:hover{color:var(--gold);}
+  .mobile-close{position:absolute;top:2rem;right:2rem;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--gold);cursor:pointer;background:none;border:none;}
+
+  /* PAGE HERO */
+  .page-hero{min-height:65vh;display:flex;flex-direction:column;justify-content:flex-end;padding:8rem 2rem 5rem;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 60%,rgba(74,26,110,0.4) 0%,transparent 55%),radial-gradient(ellipse at 20% 30%,rgba(26,10,46,0.5) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(139,26,26,0.3) 0%,transparent 45%),var(--ink);}
+  .page-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,var(--ink));pointer-events:none;}
+  /* Animated scan lines for anime aesthetic */
+  .page-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(201,168,76,0.008) 3px,rgba(201,168,76,0.008) 4px);pointer-events:none;z-index:1;}
+  .page-hero-bg-text{position:absolute;right:-1rem;bottom:-2rem;font-family:'Bebas Neue',sans-serif;font-size:clamp(7rem,18vw,15rem);color:rgba(201,168,76,0.04);line-height:1;pointer-events:none;user-select:none;}
+  .page-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%;}
+  .breadcrumb{font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.8rem;}
+  .breadcrumb a{color:var(--gold-dim);text-decoration:none;transition:color 0.3s;}
+  .breadcrumb a:hover{color:var(--gold);}
+  .breadcrumb span{opacity:0.4;}
+  .page-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,14vw,11rem);line-height:0.9;letter-spacing:0.02em;color:var(--white);}
+  .page-hero h1 em{color:var(--gold);font-style:normal;}
+  .page-hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--gray-mid);margin-top:1.2rem;letter-spacing:0.1em;}
+  .page-hero-divider{width:80px;height:1px;background:linear-gradient(to right,var(--gold),transparent);margin-top:2rem;}
+
+  section{padding:6rem 2rem;position:relative;}
+  .max-w{max-width:1200px;margin:0 auto;}
+  .section-label{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+  .section-label::before{content:'';width:30px;height:1px;background:var(--gold);}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:1.5rem;}
+  .section-title em{color:var(--gold);font-style:italic;}
+
+  /* SERIES SPOTLIGHT */
+  .series-spotlight{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(201,168,76,0.15);margin-top:4rem;overflow:hidden;}
+  .spotlight-visual{position:relative;min-height:500px;background:linear-gradient(160deg,#0a0520,#150a35,#0a0820);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .spotlight-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(74,26,110,0.3) 0%,transparent 65%),radial-gradient(ellipse at 20% 80%,rgba(201,168,76,0.08) 0%,transparent 50%);}
+  /* scan lines on visual */
+  .spotlight-visual::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.012) 2px,rgba(255,255,255,0.012) 3px);pointer-events:none;}
+  .spotlight-glyph{font-size:10rem;opacity:0.1;position:relative;z-index:1;animation:pulseGlyph 4s ease-in-out infinite;}
+  @keyframes pulseGlyph{0%,100%{opacity:0.1;transform:scale(1);}50%{opacity:0.18;transform:scale(1.05);}}
+  .spotlight-badge{position:absolute;top:2rem;left:2rem;font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:0.35rem 0.8rem;z-index:2;}
+  .spotlight-concept-stage{position:absolute;bottom:2rem;left:2rem;font-family:'Space Mono',monospace;font-size:0.48rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(201,168,76,0.5);z-index:2;}
+  .spotlight-content{padding:4rem;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;justify-content:center;border-left:1px solid rgba(201,168,76,0.1);}
+  .spotlight-tag{font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.35em;color:var(--gold);text-transform:uppercase;margin-bottom:0.8rem;}
+  .spotlight-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4rem);line-height:0.95;color:var(--white);margin-bottom:0.5rem;letter-spacing:0.02em;}
+  .spotlight-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--gold);margin-bottom:2rem;opacity:0.8;}
+  .spotlight-desc{font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:1.85;color:var(--gray-mid);margin-bottom:1.5rem;}
+  .spotlight-desc strong{color:var(--white);}
+  .spotlight-meta-row{display:flex;gap:2rem;flex-wrap:wrap;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.12);margin-bottom:2rem;}
+  .smeta{display:flex;flex-direction:column;gap:0.3rem;}
+  .smeta-label{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+  .smeta-val{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--white);}
+  .btn-outline{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.9rem 2rem;display:inline-block;text-decoration:none;transition:all 0.3s;align-self:flex-start;cursor:pointer;background:none;}
+  .btn-outline:hover{background:rgba(201,168,76,0.08);border-color:var(--gold);}
+
+  /* LORE BAR */
+  .lore-bar{background:rgba(201,168,76,0.04);border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);padding:3rem 2rem;}
+  .lore-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:stretch;}
+  .lore-item{flex:1;padding:1.5rem 2rem;border-right:1px solid rgba(201,168,76,0.1);text-align:center;}
+  .lore-item:last-child{border-right:none;}
+  .lore-val{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--gold);display:block;line-height:1;}
+  .lore-label{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;color:var(--gray-mid);text-transform:uppercase;margin-top:0.4rem;display:block;}
+
+  /* COMP TITLES (update-card style from main site) */
+  .comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:4rem;}
+  .comp-card{position:relative;padding:3rem;background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.08);overflow:hidden;transition:all 0.4s;cursor:default;}
+  .comp-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,0.05) 0%,transparent 60%);opacity:0;transition:opacity 0.4s;}
+  .comp-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .comp-card:hover::before{opacity:1;}
+  .comp-icon{font-size:2rem;margin-bottom:1rem;display:block;opacity:0.6;}
+  .comp-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.3rem;}
+  .comp-link-label{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:1rem;}
+  .comp-desc{font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.75;color:var(--gray-mid);font-style:italic;}
+
+  /* SEASONS */
+  .seasons-section{background:#0f0c0a;}
+  .seasons-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:4rem;}
+  .season-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04);background:#1a1510;transition:all 0.4s;cursor:default;}
+  .season-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+  .season-visual{height:220px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .season-visual::before{content:'';position:absolute;inset:0;}
+  .season-visual::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.015) 2px,rgba(255,255,255,0.015) 3px);}
+  .season-glyph{font-size:5rem;opacity:0.12;position:relative;z-index:1;}
+  .season-num-bg{position:absolute;bottom:-1rem;right:1rem;font-family:'Bebas Neue',sans-serif;font-size:8rem;color:rgba(255,255,255,0.04);line-height:1;}
+  .season-ep-count{position:absolute;top:1rem;right:1rem;font-family:'Space Mono',monospace;font-size:0.45rem;letter-spacing:0.2em;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:0.3rem 0.7rem;z-index:2;}
+  .season-body{padding:2rem;}
+  .season-label{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;}
+  .season-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.03em;color:var(--white);margin-bottom:0.3rem;}
+  .season-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--gold);margin-bottom:1rem;opacity:0.75;}
+  .season-desc{font-family:'Cormorant Garamond',serif;font-size:0.95rem;line-height:1.7;color:var(--gray-mid);}
+  .season-tone{margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.04);}
+  .season-tone-label{font-family:'Space Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.4rem;}
+  .season-tone-tags{display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tone-tag{font-family:'Space Mono',monospace;font-size:0.45rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(201,168,76,0.5);border:1px solid rgba(201,168,76,0.15);padding:0.25rem 0.6rem;}
+
+  /* EPISODE STRUCTURE */
+  .ep-structure{background:var(--ink);}
+  .ep-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.08);margin-top:4rem;}
+  .ep-cell{padding:2.5rem 2rem;background:var(--ink);transition:background 0.4s;position:relative;}
+  .ep-cell:hover{background:rgba(201,168,76,0.02);}
+  .ep-time{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);margin-bottom:0.3rem;line-height:1;}
+  .ep-seg-label{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.8rem;}
+  .ep-seg-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.1rem;color:var(--white);margin-bottom:0.5rem;}
+  .ep-seg-desc{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gray-mid);font-style:italic;line-height:1.6;}
+
+  /* PITCH QUOTE */
+  .pitch-section{background:linear-gradient(180deg,transparent,rgba(74,26,110,0.08) 50%,transparent);text-align:center;padding:8rem 2rem;}
+  .pitch-inner{max-width:800px;margin:0 auto;}
+  .pitch-quote-mark{font-family:'Bebas Neue',sans-serif;font-size:8rem;color:var(--gold);opacity:0.06;line-height:0.5;display:block;margin-bottom:2rem;}
+  .pitch-text{font-style:italic;font-size:clamp(1.3rem,3vw,2rem);color:rgba(250,248,245,0.85);line-height:1.55;margin-bottom:1.5rem;}
+  .pitch-comp{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);opacity:0.5;}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  footer{background:#050403;padding:4rem 2rem 2rem;border-top:1px solid rgba(201,168,76,0.1);}
+  .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:2rem;}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.1em;color:var(--gold);opacity:0.4;}
+  .footer-copy{font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--gray-mid);text-align:center;}
+
+  @media(max-width:900px){nav{padding:1.5rem;}.nav-links{display:none;}.hamburger{display:flex;}.series-spotlight{grid-template-columns:1fr;}.spotlight-visual{min-height:280px;}.spotlight-content{padding:2.5rem;}.comp-grid{grid-template-columns:1fr;}.seasons-grid{grid-template-columns:1fr;}.ep-grid{grid-template-columns:1fr;}.lore-bar-inner{flex-wrap:wrap;}.lore-item{flex:1 1 45%;border-right:none;border-bottom:1px solid rgba(201,168,76,0.1);}}
+  @media(max-width:480px){section{padding:4rem 1.2rem;}}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">✕ CLOSE</button>
+  <a href="index.html" onclick="toggleMenu()">Home</a>
+  <a href="index.html#updates" onclick="toggleMenu()">Updates</a>
+  <a href="index.html#works" onclick="toggleMenu()">Works</a>
+  <a href="novels.html" onclick="toggleMenu()">Novels</a>
+  <a href="light-novels.html" onclick="toggleMenu()">Light Novels</a>
+  <a href="manga.html" onclick="toggleMenu()">Manga</a>
+  <a href="anime.html" onclick="toggleMenu()">Anime</a>
+  <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">JAE AILEP</a>
+  <ul class="nav-links">
+    <li><a href="index.html#updates">Updates</a></li>
+    <li><a href="index.html#works">Works</a></li>
+    <li><a href="novels.html">Novels</a></li>
+    <li><a href="light-novels.html">Light Novels</a></li>
+    <li><a href="manga.html">Manga</a></li>
+    <li><a href="anime.html" class="active">Anime</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg-text">ANIME</div>
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span>›</span><span>Anime</span>
+    </div>
+    <h1>The <em>Anime</em></h1>
+    <p class="page-hero-sub">Animated series — the full Spirit Majic universe in motion, sound, and fire.</p>
+    <div class="page-hero-divider"></div>
+  </div>
+</div>
+
+<!-- SERIES SPOTLIGHT -->
+<section style="background:var(--ink);padding-top:2rem;">
+  <div class="max-w">
+    <p class="section-label reveal">Flagship Project</p>
+    <h2 class="section-title reveal">Spirit <em>Majic</em></h2>
+
+    <div class="series-spotlight reveal">
+      <div class="spotlight-visual">
+        <span class="spotlight-badge">Original Anime Series</span>
+        <span class="spotlight-glyph">⛩</span>
+        <span class="spotlight-concept-stage">Concept Stage · In Development</span>
+      </div>
+      <div class="spotlight-content">
+        <p class="spotlight-tag">Original Anime · 4 Seasons · 48–52 Episodes · Action Fantasy</p>
+        <h3 class="spotlight-title">Spirit Majic</h3>
+        <p class="spotlight-subtitle">Clans of the Hidden Axis — Animated Series</p>
+        <p class="spotlight-desc">
+          The animated form of Spirit Majic is the full vision. <strong>4 complete seasons</strong>. <strong>48–52 episodes</strong>. A 24-minute episode format designed for prestige streaming — with a story that earns every minute. Cinematic, culturally grounded, emotionally devastating when it needs to be.
+        </p>
+        <p class="spotlight-desc">
+          Target aesthetic: <em>Demon Slayer's</em> effects quality. <em>Mob Psycho 100's</em> emotional expressiveness. <em>Arcane's</em> visual mastery. <em>Avatar: The Last Airbender's</em> world architecture. All of it filtered through an <strong>Afro-mythic × Ninja × Spiritual × Ancestral</strong> lens that has never been done at this level.
+        </p>
+        <div class="spotlight-meta-row">
+          <div class="smeta"><span class="smeta-label">Format</span><span class="smeta-val">Animated Series</span></div>
+          <div class="smeta"><span class="smeta-label">Seasons</span><span class="smeta-val">4 Planned</span></div>
+          <div class="smeta"><span class="smeta-label">Episodes</span><span class="smeta-val">48–52 Total</span></div>
+          <div class="smeta"><span class="smeta-label">Episode Length</span><span class="smeta-val">24 Minutes</span></div>
+        </div>
+        <a href="#seasons" class="btn-outline">View All Seasons →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LORE BAR -->
+<div class="lore-bar reveal">
+  <div class="lore-bar-inner">
+    <div class="lore-item"><span class="lore-val">4</span><span class="lore-label">Seasons</span></div>
+    <div class="lore-item"><span class="lore-val">48–52</span><span class="lore-label">Total Episodes</span></div>
+    <div class="lore-item"><span class="lore-val">24min</span><span class="lore-label">Per Episode</span></div>
+    <div class="lore-item"><span class="lore-val">16–34</span><span class="lore-label">Target Demographic</span></div>
+    <div class="lore-item"><span class="lore-val">∞</span><span class="lore-label">Franchise Potential</span></div>
+  </div>
+</div>
+
+<!-- COMP TITLES -->
+<section style="background:#0a0806;">
+  <div class="max-w">
+    <p class="section-label reveal">Comparable Works</p>
+    <h2 class="section-title reveal">The <em>DNA</em> of Spirit Majic</h2>
+    <div class="comp-grid reveal">
+      <div class="comp-card">
+        <span class="comp-icon">⛩</span>
+        <p class="comp-name">Avatar: The Last Airbender</p>
+        <p class="comp-link-label">Elemental Nations · Found Family · World Architecture</p>
+        <p class="comp-desc">The elemental nation framework, the found-family core, the idea that world-building and character depth are not in competition — Spirit Majic inherits this and pushes further into political complexity and generational trauma.</p>
+      </div>
+      <div class="comp-card">
+        <span class="comp-icon">⚡</span>
+        <p class="comp-name">Jujutsu Kaisen</p>
+        <p class="comp-link-label">Spirit Bond System · Mature Themes · Combat Depth</p>
+        <p class="comp-desc">The curse-bond system maps directly to the Spirit SparC framework — a biological spiritual architecture with rules, tiers, and brutal consequences for breaking them. The dark themes are earned, not gratuitous.</p>
+      </div>
+      <div class="comp-card">
+        <span class="comp-icon">🎬</span>
+        <p class="comp-name">Arcane</p>
+        <p class="comp-link-label">Prestige Animation · Emotional Mastery · Visual Innovation</p>
+        <p class="comp-desc">Proof that animation can carry mature, politically complex storytelling to the highest production level. Spirit Majic's visual ambition and emotional depth sit in this tier — and its cultural authenticity goes further.</p>
+      </div>
+      <div class="comp-card">
+        <span class="comp-icon">🐉</span>
+        <p class="comp-name">Game of Thrones</p>
+        <p class="comp-link-label">Political Complexity · Moral Ambiguity · Faction Warfare</p>
+        <p class="comp-desc">Four elemental nations in cold war. An Elder Council fracturing from within. Political alliances that shift by the episode. No faction is simply good or evil — every choice costs something real.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEASONS -->
+<section id="seasons" class="seasons-section">
+  <div class="max-w">
+    <p class="section-label reveal">The Four Seasons</p>
+    <h2 class="section-title reveal">Season <em>Breakdown</em></h2>
+
+    <div class="seasons-grid">
+
+      <!-- SEASON 1 -->
+      <div class="season-card reveal">
+        <div class="season-visual" style="">
+          <div style="position:absolute;inset:0;background:linear-gradient(160deg,#100318,#1a0a2e,#200818);"></div>
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.01) 2px,rgba(255,255,255,0.01) 3px);"></div>
+          <span class="season-glyph">𓂀</span>
+          <span class="season-num-bg">1</span>
+          <span class="season-ep-count">12–13 Episodes</span>
+        </div>
+        <div class="season-body">
+          <p class="season-label">Season 1</p>
+          <h3 class="season-title">AWAKENING</h3>
+          <p class="season-tagline">"The Twin Horizon reveals himself to a world not ready."</p>
+          <p class="season-desc">Kheru revealed to the world. The pack forms — Kheru, Li'Zahra, Kairo, and Na'Veen. The Prophecy of the Twin Horizon delivered. Ends with all four nations knowing he exists and the Ankh'Yami Elder Council split on what to do about it.</p>
+          <div class="season-tone">
+            <p class="season-tone-label">Tone</p>
+            <div class="season-tone-tags">
+              <span class="tone-tag">60% Action</span>
+              <span class="tone-tag">40% Character</span>
+              <span class="tone-tag">High Energy</span>
+              <span class="tone-tag">Shonen × Political Thriller</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEASON 2 -->
+      <div class="season-card reveal">
+        <div class="season-visual">
+          <div style="position:absolute;inset:0;background:linear-gradient(160deg,#150820,#200a30,#150820);"></div>
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.01) 2px,rgba(255,255,255,0.01) 3px);"></div>
+          <span class="season-glyph">⚔️</span>
+          <span class="season-num-bg">2</span>
+          <span class="season-ep-count">12–13 Episodes</span>
+        </div>
+        <div class="season-body">
+          <p class="season-label">Season 2</p>
+          <h3 class="season-title">FRACTURE</h3>
+          <p class="season-tagline">"The clan that raised them becomes the threat they face."</p>
+          <p class="season-desc">Clan civil war erupts. Moral complexity deepens — no side is clean. The pack goes rogue, choosing each other over the Ankh'Yami. Ends with the ancient threat partially unsealed and the world's power structure fundamentally shifted.</p>
+          <div class="season-tone">
+            <p class="season-tone-label">Tone</p>
+            <div class="season-tone-tags">
+              <span class="tone-tag">40% Action</span>
+              <span class="tone-tag">60% Intrigue</span>
+              <span class="tone-tag">Morally Complex</span>
+              <span class="tone-tag">Game of Thrones × Naruto Shippuden</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEASON 3 -->
+      <div class="season-card reveal">
+        <div class="season-visual">
+          <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0d1520,#122035,#0d1520);"></div>
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.01) 2px,rgba(255,255,255,0.01) 3px);"></div>
+          <span class="season-glyph">🌍</span>
+          <span class="season-num-bg">3</span>
+          <span class="season-ep-count">12–13 Episodes</span>
+        </div>
+        <div class="season-body">
+          <p class="season-label">Season 3</p>
+          <h3 class="season-title">CONVERGENCE</h3>
+          <p class="season-tagline">"A quest that forces enemies to stand side by side."</p>
+          <p class="season-desc">The quest for the four Elemental Keystones — one arc per nation. Forced cooperation with enemies. Each nation reveals its deepest secret. Ends with a major battle, the Awakening of Vo'Rahn, and a new world status quo.</p>
+          <div class="season-tone">
+            <p class="season-tone-label">Tone</p>
+            <div class="season-tone-tags">
+              <span class="tone-tag">70% Action</span>
+              <span class="tone-tag">30% Character</span>
+              <span class="tone-tag">Hope Restored</span>
+              <span class="tone-tag">Epic Quest × Avengers: Endgame</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEASON 4 -->
+      <div class="season-card reveal">
+        <div class="season-visual">
+          <div style="position:absolute;inset:0;background:linear-gradient(160deg,#151008,#201808,#151005);"></div>
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.01) 2px,rgba(255,255,255,0.01) 3px);"></div>
+          <span class="season-glyph">✦</span>
+          <span class="season-num-bg">4</span>
+          <span class="season-ep-count">12–13 Episodes</span>
+        </div>
+        <div class="season-body">
+          <p class="season-label">Season 4</p>
+          <h3 class="season-title">EQUILIBRIUM</h3>
+          <p class="season-tagline">"The final choice. The earned ending. The world that comes after."</p>
+          <p class="season-desc">A new threat beyond the four nations. Kheru's ultimate decision as the Equilibrium Breaker. The Corrupted Spirit Army War. A final battle that is more spiritual than physical. A bittersweet epilogue — and the suggestion of a next generation.</p>
+          <div class="season-tone">
+            <p class="season-tone-label">Tone</p>
+            <div class="season-tone-tags">
+              <span class="tone-tag">50% Action</span>
+              <span class="tone-tag">50% Resolution</span>
+              <span class="tone-tag">Bittersweet</span>
+              <span class="tone-tag">Philosophical Shonen · Legacy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EPISODE STRUCTURE -->
+<section class="ep-structure">
+  <div class="max-w">
+    <p class="section-label reveal">Standard Episode Format</p>
+    <h2 class="section-title reveal">Episode <em>Structure</em></h2>
+    <div class="ep-grid reveal">
+      <div class="ep-cell">
+        <p class="ep-time">2 min</p>
+        <p class="ep-seg-label">Cold Open</p>
+        <p class="ep-seg-name">The Hook</p>
+        <p class="ep-seg-desc">Mission briefing, immediate threat, or a scene from the past that recontextualizes everything that follows. No episode begins gently.</p>
+      </div>
+      <div class="ep-cell">
+        <p class="ep-time">1.5 min</p>
+        <p class="ep-seg-label">Opening Theme</p>
+        <p class="ep-seg-name">Character-Focused OP</p>
+        <p class="ep-seg-desc">Changes per arc. Always centered on character — not just action. The opening of Season 1 and Season 4 are designed to be compared.</p>
+      </div>
+      <div class="ep-cell">
+        <p class="ep-time">6 min</p>
+        <p class="ep-seg-label">Act 1</p>
+        <p class="ep-seg-name">Setup & Character</p>
+        <p class="ep-seg-desc">The world breathing. Character interaction that reveals more than dialogue can. The scene before the storm is always the most important.</p>
+      </div>
+      <div class="ep-cell">
+        <p class="ep-time">8 min</p>
+        <p class="ep-seg-label">Act 2</p>
+        <p class="ep-seg-name">Rising Action & Complication</p>
+        <p class="ep-seg-desc">The plan breaks. Skills are tested. The team must coordinate. The complications always come from character, not plot convenience.</p>
+      </div>
+      <div class="ep-cell">
+        <p class="ep-time">6 min</p>
+        <p class="ep-seg-label">Act 3</p>
+        <p class="ep-seg-name">Climax & Resolution Setup</p>
+        <p class="ep-seg-desc">The payoff — combat, emotional, or political. The resolution that raises the next question. No episode ends with a closed door.</p>
+      </div>
+      <div class="ep-cell">
+        <p class="ep-time">1 min</p>
+        <p class="ep-seg-label">Post-Credits</p>
+        <p class="ep-seg-name">The Tease</p>
+        <p class="ep-seg-desc">A scene, a line, a single image. Sometimes answers a question. More often opens three new ones. Always worth staying for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PITCH QUOTE -->
+<section class="pitch-section">
+  <div class="pitch-inner reveal">
+    <span class="pitch-quote-mark">"</span>
+    <p class="pitch-text">Spirit Majic follows Yong'Kheru, 17, who violated the laws of nature by bonding with both a golden falcon and a shadow wolf. As four elemental nations prepare for war, he and his found family must prevent catastrophe while learning to control powers that shouldn't exist.</p>
+    <p class="pitch-comp">Avatar: TLA · Jujutsu Kaisen · Game of Thrones · Arcane</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">JAE AILEP</div>
+    <p class="footer-copy">© 2026 Jae-Mier Ailep / Jae Ailep — All Rights Reserved<br>All works, stories, characters, and universes are original intellectual property of Jae Ailep.</p>
+  </div>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor');const ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-4+'px';cursor.style.top=my-4+'px';});
+  function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx-16+'px';ring.style.top=ry-16+'px';requestAnimationFrame(animRing);}
+  animRing();
+  document.querySelectorAll('a,button,.season-card,.comp-card').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2)';ring.style.transform='scale(1.5)';ring.style.opacity='1';});el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';ring.style.transform='scale(1)';ring.style.opacity='0.6';});});
+  window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);});
+  function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+  const reveals=document.querySelectorAll('.reveal');
+  const observer=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);observer.unobserve(e.target);}});},{threshold:0.1});
+  reveals.forEach(r=>observer.observe(r));
+</script>
+</body>
+</html>

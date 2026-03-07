@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Light Novels — JAE AILEP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0806;
+    --paper: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-dim: #8a6d2f;
+    --crimson: #8b1a1a;
+    --cosmic: #1a0a2e;
+    --nebula: #4a1a6e;
+    --ice: #a8d8ea;
+    --white: #faf8f5;
+    --gray: #3a3530;
+    --gray-mid: #6b6560;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--ink);color:var(--white);font-family:'Cormorant Garamond',serif;overflow-x:hidden;cursor:none;}
+  .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.1s ease;mix-blend-mode:difference;}
+  .cursor-ring{position:fixed;width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.15s ease;opacity:0.6;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9997;opacity:0.35;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(10,8,6,0.9),transparent);transition:all 0.4s ease;}
+  nav.scrolled{background:rgba(10,8,6,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.15);}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.1em;color:var(--gold);text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--gray-mid);text-decoration:none;text-transform:uppercase;transition:color 0.3s;position:relative;}
+  .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+  .nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+  .hamburger span{display:block;width:24px;height:1px;background:var(--gold);transition:all 0.3s;}
+  .mobile-menu{position:fixed;inset:0;background:rgba(10,8,6,0.98);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:3rem;backdrop-filter:blur(20px);}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:0.05em;color:var(--white);text-decoration:none;transition:color 0.3s;}
+  .mobile-menu a:hover{color:var(--gold);}
+  .mobile-close{position:absolute;top:2rem;right:2rem;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--gold);cursor:pointer;background:none;border:none;}
+
+  /* PAGE HERO */
+  .page-hero{min-height:60vh;display:flex;flex-direction:column;justify-content:flex-end;padding:8rem 2rem 5rem;position:relative;overflow:hidden;background:radial-gradient(ellipse at 70% 60%,rgba(26,10,46,0.6) 0%,transparent 55%),radial-gradient(ellipse at 20% 20%,rgba(10,26,46,0.5) 0%,transparent 50%),var(--ink);}
+  .page-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,var(--ink));pointer-events:none;}
+  .page-hero-bg-text{position:absolute;right:-2rem;bottom:-2rem;font-family:'Bebas Neue',sans-serif;font-size:clamp(6rem,18vw,16rem);color:rgba(201,168,76,0.04);line-height:1;pointer-events:none;user-select:none;letter-spacing:0.02em;}
+  .page-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%;}
+  .breadcrumb{font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.8rem;}
+  .breadcrumb a{color:var(--gold-dim);text-decoration:none;transition:color 0.3s;}
+  .breadcrumb a:hover{color:var(--gold);}
+  .breadcrumb span{opacity:0.4;}
+  .page-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,12vw,9rem);line-height:0.9;letter-spacing:0.02em;color:var(--white);}
+  .page-hero h1 em{color:var(--gold);font-style:normal;}
+  .page-hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--gray-mid);margin-top:1.2rem;letter-spacing:0.1em;}
+  .page-hero-divider{width:80px;height:1px;background:linear-gradient(to right,var(--gold),transparent);margin-top:2rem;}
+
+  section{padding:6rem 2rem;position:relative;}
+  .max-w{max-width:1200px;margin:0 auto;}
+  .section-label{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+  .section-label::before{content:'';width:30px;height:1px;background:var(--gold);}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:1.5rem;}
+  .section-title em{color:var(--gold);font-style:italic;}
+
+  /* SERIES SPOTLIGHT */
+  .series-spotlight{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(201,168,76,0.15);margin-top:4rem;overflow:hidden;}
+  .spotlight-visual{position:relative;min-height:500px;background:linear-gradient(160deg,#050d20,#0a1530,#050d1a);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .spotlight-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 40% 40%,rgba(100,168,220,0.1) 0%,transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(26,10,46,0.3) 0%,transparent 50%);}
+  .spotlight-glyph{font-size:10rem;opacity:0.1;position:relative;z-index:1;animation:pulseGlyph 4s ease-in-out infinite;}
+  @keyframes pulseGlyph{0%,100%{opacity:0.1;transform:scale(1);}50%{opacity:0.18;transform:scale(1.05);}}
+  .spotlight-badge{position:absolute;top:2rem;left:2rem;font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:0.35rem 0.8rem;z-index:2;}
+  .spotlight-jp{position:absolute;bottom:2rem;right:2rem;font-family:'Noto Serif JP',serif;font-size:3rem;color:rgba(201,168,76,0.08);z-index:2;writing-mode:vertical-rl;}
+  .spotlight-content{padding:4rem;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;justify-content:center;border-left:1px solid rgba(201,168,76,0.1);}
+  .spotlight-tag{font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.35em;color:var(--gold);text-transform:uppercase;margin-bottom:0.8rem;}
+  .spotlight-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4rem);line-height:0.95;color:var(--white);margin-bottom:0.5rem;letter-spacing:0.02em;}
+  .spotlight-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--gold);margin-bottom:2rem;opacity:0.8;}
+  .spotlight-desc{font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:1.85;color:var(--gray-mid);margin-bottom:1.5rem;}
+  .spotlight-desc strong{color:var(--white);font-weight:600;}
+  .spotlight-meta-row{display:flex;gap:2rem;flex-wrap:wrap;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.12);margin-bottom:2rem;}
+  .smeta{display:flex;flex-direction:column;gap:0.3rem;}
+  .smeta-label{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+  .smeta-val{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--white);}
+  .btn-outline{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.9rem 2rem;display:inline-block;text-decoration:none;transition:all 0.3s;align-self:flex-start;cursor:pointer;background:none;}
+  .btn-outline:hover{background:rgba(201,168,76,0.08);border-color:var(--gold);}
+
+  /* VOLUMES */
+  .volumes-section{background:#0f0c0a;}
+  .volumes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-top:4rem;}
+  .volume-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04);background:#1a1510;transition:all 0.4s ease;cursor:default;}
+  .volume-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+  .volume-cover{aspect-ratio:2/3;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .volume-cover-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+  .volume-cover-glyph{font-size:4rem;opacity:0.15;position:relative;z-index:1;}
+  .volume-cover-num{position:absolute;bottom:1rem;left:1.5rem;font-family:'Bebas Neue',sans-serif;font-size:5rem;color:rgba(255,255,255,0.06);line-height:1;}
+  .volume-cover-jp{position:absolute;top:1rem;right:1rem;font-family:'Noto Serif JP',serif;font-size:0.7rem;color:rgba(201,168,76,0.2);writing-mode:vertical-rl;letter-spacing:0.2em;}
+  .volume-cover-stripe{position:absolute;top:0;left:0;width:4px;height:100%;}
+  .vol-status{position:absolute;top:1rem;left:1rem;font-family:'Space Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.3rem 0.6rem;z-index:3;}
+  .vol-status.coming{color:var(--ink);background:var(--gold);}
+  .vol-status.announced{color:var(--gold);border:1px solid rgba(201,168,76,0.4);background:transparent;}
+  .volume-body{padding:1.5rem;}
+  .volume-vol{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;}
+  .volume-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--white);margin-bottom:0.3rem;line-height:1.2;}
+  .volume-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;opacity:0.75;}
+  .volume-desc{font-family:'Cormorant Garamond',serif;font-size:0.92rem;line-height:1.65;color:var(--gray-mid);}
+  .volume-footer{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.04);}
+  .volume-pages{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;}
+  .volume-num-label{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:rgba(201,168,76,0.3);}
+
+  /* LORE BAR */
+  .lore-bar{background:rgba(201,168,76,0.04);border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);padding:3rem 2rem;}
+  .lore-bar-inner{max-width:1200px;margin:0 auto;display:flex;gap:0;align-items:stretch;}
+  .lore-item{flex:1;padding:1.5rem 2rem;border-right:1px solid rgba(201,168,76,0.1);text-align:center;}
+  .lore-item:last-child{border-right:none;}
+  .lore-val{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--gold);display:block;line-height:1;}
+  .lore-label{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.25em;color:var(--gray-mid);text-transform:uppercase;margin-top:0.4rem;display:block;}
+
+  /* FORMAT EXPLAINER */
+  .format-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.08);margin-top:4rem;}
+  .format-cell{padding:3rem 2rem;background:var(--ink);transition:background 0.4s;cursor:default;}
+  .format-cell:hover{background:rgba(201,168,76,0.03);}
+  .format-icon{font-size:1.8rem;margin-bottom:1rem;display:block;opacity:0.7;}
+  .format-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.8rem;}
+  .format-desc{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-style:italic;color:var(--gray-mid);line-height:1.65;}
+  .format-spec{font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;margin-top:1rem;}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  footer{background:#050403;padding:4rem 2rem 2rem;border-top:1px solid rgba(201,168,76,0.1);}
+  .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:2rem;}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.1em;color:var(--gold);opacity:0.4;}
+  .footer-copy{font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--gray-mid);text-align:center;}
+
+  @media(max-width:900px){nav{padding:1.5rem;}.nav-links{display:none;}.hamburger{display:flex;}.series-spotlight{grid-template-columns:1fr;}.spotlight-visual{min-height:300px;}.spotlight-content{padding:2.5rem;}.format-grid{grid-template-columns:1fr;}.lore-bar-inner{flex-wrap:wrap;}.lore-item{flex:1 1 45%;border-right:none;border-bottom:1px solid rgba(201,168,76,0.1);}}
+  @media(max-width:480px){section{padding:4rem 1.2rem;}.volumes-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">✕ CLOSE</button>
+  <a href="index.html" onclick="toggleMenu()">Home</a>
+  <a href="index.html#updates" onclick="toggleMenu()">Updates</a>
+  <a href="index.html#works" onclick="toggleMenu()">Works</a>
+  <a href="index.html#universe" onclick="toggleMenu()">Universe</a>
+  <a href="index.html#about" onclick="toggleMenu()">About</a>
+  <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">JAE AILEP</a>
+  <ul class="nav-links">
+    <li><a href="index.html#updates">Updates</a></li>
+    <li><a href="index.html#works">Works</a></li>
+    <li><a href="novels.html">Novels</a></li>
+    <li><a href="light-novels.html" class="active">Light Novels</a></li>
+    <li><a href="manga.html">Manga</a></li>
+    <li><a href="anime.html">Anime</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg-text">LIGHT<br>NOVELS</div>
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span>›</span><span>Light Novels</span>
+    </div>
+    <h1>Light <em>Novels</em></h1>
+    <p class="page-hero-sub">The illustrated serialized form — character-driven, fast-paced, essential.</p>
+    <div class="page-hero-divider"></div>
+  </div>
+</div>
+
+<!-- SERIES SPOTLIGHT -->
+<section style="background:var(--ink);padding-top:2rem;">
+  <div class="max-w">
+    <p class="section-label reveal">Featured Series</p>
+    <h2 class="section-title reveal">Spirit <em>Majic</em></h2>
+
+    <div class="series-spotlight reveal">
+      <div class="spotlight-visual">
+        <span class="spotlight-badge">Light Novel Series</span>
+        <span class="spotlight-glyph">🌙</span>
+        <span class="spotlight-jp">精霊の魔法</span>
+      </div>
+      <div class="spotlight-content">
+        <p class="spotlight-tag">Light Novel Series · 8 Volumes · Afro-Mythic Fantasy</p>
+        <h3 class="spotlight-title">Spirit Majic</h3>
+        <p class="spotlight-subtitle">Clans of the Hidden Axis — Light Novel Edition</p>
+        <p class="spotlight-desc">
+          The light novel adaptation of the Spirit Majic universe — faster-paced, character-forward, with in-world illustrations embedded throughout. Each volume covers one half of a major story arc, built for readers who live inside characters' heads.
+        </p>
+        <p class="spotlight-desc">
+          <strong>250–350 pages per volume</strong>. <strong>10–12 chapters each</strong>. <strong>8–12 original illustrations</strong> per volume, plus bonus content: character profiles, world lore deep-dives, and side stories that don't appear in the main novel series.
+        </p>
+        <div class="spotlight-meta-row">
+          <div class="smeta"><span class="smeta-label">Format</span><span class="smeta-val">Light Novel Series</span></div>
+          <div class="smeta"><span class="smeta-label">Volumes</span><span class="smeta-val">8 Planned</span></div>
+          <div class="smeta"><span class="smeta-label">Pages/Vol</span><span class="smeta-val">250–350</span></div>
+          <div class="smeta"><span class="smeta-label">Status</span><span class="smeta-val">In Development</span></div>
+        </div>
+        <a href="#volumes" class="btn-outline">View All Volumes →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LORE BAR -->
+<div class="lore-bar reveal">
+  <div class="lore-bar-inner">
+    <div class="lore-item"><span class="lore-val">8</span><span class="lore-label">Volumes Planned</span></div>
+    <div class="lore-item"><span class="lore-val">10–12</span><span class="lore-label">Chapters / Volume</span></div>
+    <div class="lore-item"><span class="lore-val">8–12</span><span class="lore-label">Illustrations / Volume</span></div>
+    <div class="lore-item"><span class="lore-val">4</span><span class="lore-label">Main Story Arcs</span></div>
+    <div class="lore-item"><span class="lore-val">+</span><span class="lore-label">Bonus Side Stories</span></div>
+  </div>
+</div>
+
+<!-- FORMAT EXPLAINER -->
+<section style="background:#0a0806;">
+  <div class="max-w">
+    <p class="section-label reveal">What's Inside</p>
+    <h2 class="section-title reveal">Light Novel <em>Format</em></h2>
+    <div class="format-grid reveal">
+      <div class="format-cell">
+        <span class="format-icon">📖</span>
+        <p class="format-name">Main Narrative</p>
+        <p class="format-desc">The core Spirit Majic story told in light novel pacing — tight chapters, deep interiority, each volume covering half an arc of the larger story.</p>
+        <p class="format-spec">10–12 Chapters · 250–350 Pages</p>
+      </div>
+      <div class="format-cell">
+        <span class="format-icon">🎨</span>
+        <p class="format-name">Original Illustrations</p>
+        <p class="format-desc">Each volume includes 8–12 original in-world illustrations — key character moments, Spirit Animal reveals, and major battle sequences brought to the page visually.</p>
+        <p class="format-spec">8–12 Illustrations Per Volume</p>
+      </div>
+      <div class="format-cell">
+        <span class="format-icon">✦</span>
+        <p class="format-name">Bonus Content</p>
+        <p class="format-desc">Character profile cards, extended world lore, and side stories exclusive to the light novel editions — content that doesn't exist anywhere else in the Spirit Majic universe.</p>
+        <p class="format-spec">Exclusive · Volume-Only Content</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VOLUMES -->
+<section id="volumes" class="volumes-section">
+  <div class="max-w">
+    <p class="section-label reveal">The Series</p>
+    <h2 class="section-title reveal">All <em>Volumes</em></h2>
+
+    <div class="volumes-grid">
+
+      <!-- VOL 1 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#100318,#1a0a2e,#200818);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">𓂀</span>
+            <span class="volume-cover-num">1</span>
+            <span class="volume-cover-jp">覚醒</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#8b1a1a,#4a0a0a);"></div>
+          </div>
+          <span class="vol-status coming">In Development</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 1 · Awakening Part 1</p>
+          <h3 class="volume-title">The Twin Horizon Rises</h3>
+          <p class="volume-subtitle">"Two spirits. One impossible boy."</p>
+          <p class="volume-desc">Kheru's introduction, the pack's first meeting, and the first fractures in the world's idea of what the Spirit Bond can be. His dual awakening breaks everything — and announces him to every nation at once.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 280 Pages</span>
+            <span class="volume-num-label">Vol. 1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOL 2 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#0d1525,#1a2035,#0d1520);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">🦅</span>
+            <span class="volume-cover-num">2</span>
+            <span class="volume-cover-jp">予言</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#c9a84c,#8a6d2f);"></div>
+          </div>
+          <span class="vol-status announced">Announced</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 2 · Awakening Part 2</p>
+          <h3 class="volume-title">The Prophecy Unveiled</h3>
+          <p class="volume-subtitle">"The savior and the destroyer are the same person."</p>
+          <p class="volume-desc">The first major battle sequence. The Elder Council reveals the full Prophecy of the Twin Horizon to Kheru — and Li'Zahra's confession during recovery changes everything between them.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 300 Pages</span>
+            <span class="volume-num-label">Vol. 2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOL 3 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#150820,#200a30,#150a20);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">⚔️</span>
+            <span class="volume-cover-num">3</span>
+            <span class="volume-cover-jp">断裂</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#6a1a8b,#3a0a5a);"></div>
+          </div>
+          <span class="vol-status announced">Announced</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 3 · Fracture Part 1</p>
+          <h3 class="volume-title">The Clan Civil War Begins</h3>
+          <p class="volume-subtitle">"The hidden splits in two."</p>
+          <p class="volume-desc">The Traitor Elders make their first overt move. The Ankh'Yami fractures from within. The pack goes rogue — choosing each other over the clan that raised them.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 310 Pages</span>
+            <span class="volume-num-label">Vol. 3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOL 4 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#0a0a18,#121230,#0a0a18);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">🐺</span>
+            <span class="volume-cover-num">4</span>
+            <span class="volume-cover-jp">離脱</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#1a3a8b,#0a1a5a);"></div>
+          </div>
+          <span class="vol-status announced">Announced</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 4 · Fracture Part 2</p>
+          <h3 class="volume-title">The Pack Goes Rogue</h3>
+          <p class="volume-subtitle">"No clan. No rules. Just the four of us."</p>
+          <p class="volume-desc">Cut off from the Ankh'Yami, the pack must survive alone. Moral lines blur. Alliances with enemies form. And Kheru's dual-spirit bond begins showing signs it could collapse into something no one can stop.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 295 Pages</span>
+            <span class="volume-num-label">Vol. 4</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOL 5 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#120805,#1e1008,#120805);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">🔥</span>
+            <span class="volume-cover-num">5</span>
+            <span class="volume-cover-jp">収束</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#8b1a1a,#5a0a0a);"></div>
+          </div>
+          <span class="vol-status announced">Announced</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 5 · Convergence Part 1</p>
+          <h3 class="volume-title">Keystone Quest — Fire & Water</h3>
+          <p class="volume-subtitle">"Enemies become allies when the world demands it."</p>
+          <p class="volume-desc">The quest for the Elemental Keystones begins. Into Ka'Rai and Mizuchi territory. Forced cooperation with those who once wanted the pack dead — and the first Keystone's horrifying truth.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 320 Pages</span>
+            <span class="volume-num-label">Vol. 5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOL 6 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#081512,#0d201a,#081512);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">⚡</span>
+            <span class="volume-cover-num">6</span>
+            <span class="volume-cover-jp">統合</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#1a6b4a,#0a3a28);"></div>
+          </div>
+          <span class="vol-status announced">Announced</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 6 · Convergence Part 2</p>
+          <h3 class="volume-title">Keystone Quest — Air & Earth</h3>
+          <p class="volume-subtitle">"The world's balance rests on four stones and one boy."</p>
+          <p class="volume-desc">Tian'Feng and Doro. The final two Keystones. A massive battle that triggers Kheru's most complete Eclipture Form yet — and a loss that the pack will never fully recover from.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 315 Pages</span>
+            <span class="volume-num-label">Vol. 6</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOL 7 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#0a0a0a,#151515,#0a0a0a);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">⚖️</span>
+            <span class="volume-cover-num">7</span>
+            <span class="volume-cover-jp">均衡</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#c9a84c,#8a6d2f);"></div>
+          </div>
+          <span class="vol-status announced">Announced</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 7 · Equilibrium Part 1</p>
+          <h3 class="volume-title">New Threat, Moral Dilemma</h3>
+          <p class="volume-subtitle">"What if saving the world means breaking it first?"</p>
+          <p class="volume-desc">A new threat emerges beyond the four nations. Kheru faces an impossible moral choice — and the pack discovers that their definition of balance was always incomplete.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 330 Pages</span>
+            <span class="volume-num-label">Vol. 7</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOL 8 -->
+      <div class="volume-card reveal">
+        <div class="volume-cover" style="background:linear-gradient(160deg,#181005,#251808,#181005);">
+          <div class="volume-cover-inner">
+            <span class="volume-cover-glyph">✦</span>
+            <span class="volume-cover-num">8</span>
+            <span class="volume-cover-jp">完結</span>
+            <div class="volume-cover-stripe" style="background:linear-gradient(to bottom,#ffffff,#c9a84c);"></div>
+          </div>
+          <span class="vol-status announced">Announced</span>
+        </div>
+        <div class="volume-body">
+          <p class="volume-vol">Volume 8 · Equilibrium Part 2 · Final Volume</p>
+          <h3 class="volume-title">The Final Battle & Epilogue</h3>
+          <p class="volume-subtitle">"Every spirit remembers. This is what it was all for."</p>
+          <p class="volume-desc">The final confrontation. The Equilibrium Breaker activated. A world transformed. An epilogue that doesn't give easy answers — only the kind of peace that costs everything to build.</p>
+          <div class="volume-footer">
+            <span class="volume-pages">Est. 350 Pages · Final</span>
+            <span class="volume-num-label">Vol. 8</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">JAE AILEP</div>
+    <p class="footer-copy">© 2026 Jae-Mier Ailep / Jae Ailep — All Rights Reserved<br>All works, stories, characters, and universes are original intellectual property of Jae Ailep.</p>
+  </div>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor'); const ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-4+'px';cursor.style.top=my-4+'px';});
+  function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx-16+'px';ring.style.top=ry-16+'px';requestAnimationFrame(animRing);}
+  animRing();
+  document.querySelectorAll('a,button,.volume-card').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2)';ring.style.transform='scale(1.5)';ring.style.opacity='1';});el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';ring.style.transform='scale(1)';ring.style.opacity='0.6';});});
+  window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);});
+  function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+  const reveals=document.querySelectorAll('.reveal');
+  const observer=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);observer.unobserve(e.target);}});},{threshold:0.1});
+  reveals.forEach(r=>observer.observe(r));
+</script>
+</body>
+</html>
