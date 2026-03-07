@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novels — JAE AILEP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0806;
+    --paper: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-dim: #8a6d2f;
+    --crimson: #8b1a1a;
+    --cosmic: #1a0a2e;
+    --nebula: #4a1a6e;
+    --ice: #a8d8ea;
+    --white: #faf8f5;
+    --gray: #3a3530;
+    --gray-mid: #6b6560;
+    --rain: #a8c5d6;
+    --steel: #1c2a35;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--white);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Cursor */
+  .cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed; width: 32px; height: 32px;
+    border: 1px solid var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transition: all 0.15s ease; opacity: 0.6;
+  }
+
+  /* Grain */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9997; opacity: 0.35;
+  }
+
+  /* NAV — identical to main site */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100; padding: 1.5rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(10,8,6,0.9), transparent);
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(10,8,6,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 0.1em;
+    color: var(--gold); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--gray-mid); text-decoration: none;
+    text-transform: uppercase; transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute;
+    bottom: -4px; left: 0; width: 0; height: 1px;
+    background: var(--gold); transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-links a.active { color: var(--gold); }
+  .nav-links a.active::after { width: 100%; }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; background: none; border: none;
+  }
+  .hamburger span { display: block; width: 24px; height: 1px; background: var(--gold); transition: all 0.3s; }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed; inset: 0;
+    background: rgba(10,8,6,0.98);
+    z-index: 200; display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 3rem; backdrop-filter: blur(20px);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif; font-size: 4rem;
+    letter-spacing: 0.05em; color: var(--white);
+    text-decoration: none; transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-close {
+    position: absolute; top: 2rem; right: 2rem;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.3em; color: var(--gold);
+    cursor: pointer; background: none; border: none;
+  }
+
+  /* PAGE HERO */
+  .page-hero {
+    min-height: 55vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 6rem 3rem 5rem;
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse at 10% 80%, rgba(28,42,53,0.8) 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 20%, rgba(26,10,46,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(139,26,26,0.15) 0%, transparent 40%),
+      var(--ink);
+  }
+
+  /* Animated rain on hero */
+  #rain-canvas {
+    position: absolute; inset: 0;
+    pointer-events: none; opacity: 0.12;
+  }
+
+  .page-hero-inner {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+  }
+
+  .breadcrumb {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.35em;
+    color: var(--gold-dim); text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .breadcrumb a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
+  .breadcrumb a:hover { color: var(--gold); }
+  .breadcrumb span { color: rgba(201,168,76,0.3); }
+
+  .page-hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    line-height: 0.88; letter-spacing: 0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,168,76,0.4);
+    opacity: 0; animation: fadeUp 1s 0.3s forwards;
+  }
+  .page-hero h1 .filled {
+    color: var(--white);
+    -webkit-text-stroke: 0;
+    display: block;
+  }
+  .page-hero h1 .rain-word {
+    color: var(--rain);
+    -webkit-text-stroke: 0;
+  }
+
+  .page-hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: clamp(1rem, 2vw, 1.4rem);
+    color: var(--gray-mid); margin-top: 1.2rem;
+    opacity: 0; animation: fadeUp 1s 0.6s forwards;
+    max-width: 560px;
+  }
+
+  .hero-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 2rem 0;
+    opacity: 0; animation: fadeUp 1s 0.8s forwards;
+  }
+
+  /* SECTIONS */
+  .max-w { max-width: 1200px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.4em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 300; line-height: 1.1;
+    color: var(--white); margin-bottom: 1.5rem;
+  }
+  .section-title em { color: var(--gold); font-style: italic; }
+
+  /* ═══════════════════════════
+   BOOK SHOWCASE (Featured)
+  ═══════════════════════════ */
+  #showcase {
+    padding: 7rem 3rem;
+    background: linear-gradient(to bottom, var(--ink), #0d0a08);
+  }
+
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 5rem;
+    align-items: start;
+    margin-top: 4rem;
+  }
+
+  /* Book Cover */
+  .book-cover-wrap {
+    position: relative;
+  }
+
+  .book-cover {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(168,197,214,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(139,26,26,0.2) 0%, transparent 50%),
+      linear-gradient(160deg, #0d1a22 0%, #111820 40%, #0a0d10 100%);
+    border: 1px solid rgba(168,197,214,0.12);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2.5rem;
+  }
+
+  .book-cover-rain {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+
+  /* Rain streak lines on cover */
+  .cover-rain-line {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(168,197,214,0.15), transparent);
+    animation: coverRain var(--d, 2s) linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes coverRain {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(200%); }
+  }
+
+  .book-cover-top {
+    position: relative; z-index: 2;
+  }
+
+  .cover-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.45rem; letter-spacing: 0.4em;
+    color: rgba(168,197,214,0.5);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .cover-author {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: rgba(201,168,76,0.7);
+    letter-spacing: 0.2em;
+  }
+
+  .book-cover-center {
+    position: relative; z-index: 2;
+    text-align: center;
+  }
+
+  .cover-city-art {
+    width: 100%;
+    height: 120px;
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  /* Seattle skyline SVG-style via CSS */
+  .city-silhouette {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 100%;
+    background:
+      linear-gradient(to top, rgba(10,15,18,0.9) 0%, transparent 60%);
+  }
+
+  .cover-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    line-height: 0.88;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+  .cover-title .city {
+    font-size: 2rem;
+    color: rgba(168,197,214,0.7);
+    display: block;
+    letter-spacing: 0.3em;
+  }
+
+  .book-cover-bottom {
+    position: relative; z-index: 2;
+    border-top: 1px solid rgba(168,197,214,0.1);
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .cover-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.65rem;
+    color: rgba(168,197,214,0.4);
+    max-width: 160px;
+    line-height: 1.5;
+  }
+
+  .cover-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.4rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 0.3rem 0.6rem;
+  }
+
+  .cover-shadow {
+    position: absolute;
+    top: 1.2rem; right: -1.2rem;
+    bottom: -1.2rem; left: 1.2rem;
+    border: 1px solid rgba(201,168,76,0.15);
+    z-index: -1;
+  }
+
+  /* Book Info */
+  .book-info { padding-top: 0.5rem; }
+
+  .book-genre-tags {
+    display: flex; gap: 0.6rem; flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .genre-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--gold-dim);
+  }
+  .genre-tag.primary {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  .book-title-full {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .book-title-full .sub {
+    font-size: 0.45em;
+    color: var(--rain);
+    letter-spacing: 0.2em;
+    display: block;
+    margin-top: 0.3rem;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+  }
+
+  .book-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--gray-mid);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+
+  .book-logline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--gray-mid);
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid rgba(201,168,76,0.3);
+  }
+  .book-logline strong { color: var(--white); }
+
+  .book-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    border: 1px solid rgba(201,168,76,0.08);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .meta-item {}
+  .meta-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.48rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gold-dim);
+    margin-bottom: 0.4rem;
+  }
+  .meta-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; color: var(--white);
+    font-weight: 600;
+  }
+
+  .the-problem {
+    padding: 2rem;
+    background: rgba(168,197,214,0.03);
+    border: 1px solid rgba(168,197,214,0.12);
+    margin-bottom: 2.5rem;
+  }
+
+  .problem-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(168,197,214,0.6);
+    margin-bottom: 1rem;
+  }
+
+  .problem-rows { display: flex; flex-direction: column; gap: 0; }
+
+  .problem-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(168,197,214,0.06);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+  }
+  .problem-row .p-item { color: var(--gray-mid); letter-spacing: 0.05em; }
+  .problem-row .p-val { color: var(--gold); }
+
+  .problem-total {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 1rem; margin-top: 0.3rem;
+  }
+  .problem-total .p-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(168,197,214,0.5);
+  }
+  .problem-total .p-total {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  .problem-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 0.75rem;
+    color: var(--gray-mid); text-align: center;
+    margin-top: 0.8rem;
+  }
+
+  .book-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink); background: var(--gold);
+    padding: 1.2rem 2.5rem; border: none;
+    cursor: pointer; transition: all 0.3s;
+    text-decoration: none; display: inline-block;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: ''; position: absolute; inset: 0;
+    background: white; transform: translateX(-100%);
+    transition: transform 0.3s; opacity: 0.2;
+  }
+  .btn-primary:hover::after { transform: translateX(0); }
+
+  .btn-secondary {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 1.2rem 2.5rem;
+    border: 1px solid rgba(201,168,76,0.3);
+    background: transparent; cursor: pointer;
+    transition: all 0.3s; text-decoration: none;
+    display: inline-block;
+  }
+  .btn-secondary:hover {
+    background: rgba(201,168,76,0.08);
+    border-color: var(--gold);
+  }
+
+  /* ═══════════════════════════
+   SYNOPSIS / TICKER
+  ═══════════════════════════ */
+  .ticker-band {
+    background: rgba(168,197,214,0.08);
+    border-top: 1px solid rgba(168,197,214,0.1);
+    border-bottom: 1px solid rgba(168,197,214,0.1);
+    padding: 1rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 35s linear infinite;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(168,197,214,0.4);
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ═══════════════════════════
+   CHARACTERS
+  ═══════════════════════════ */
+  #characters {
+    padding: 7rem 3rem;
+    background: #0d0a08;
+  }
+
+  .char-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .char-card {
+    border: 1px solid rgba(201,168,76,0.07);
+    padding: 2rem 1.8rem;
+    background: rgba(255,255,255,0.015);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s;
+  }
+  .char-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 2px; height: 0;
+    background: var(--gold);
+    transition: height 0.4s ease;
+  }
+  .char-card:hover {
+    border-color: rgba(201,168,76,0.25);
+    background: rgba(201,168,76,0.03);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .char-card:hover::before { height: 100%; }
+
+  /* Protagonist card is wider */
+  .char-card.lead { grid-column: span 2; }
+
+  .char-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.48rem; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--gold-dim);
+    margin-bottom: 0.6rem;
+  }
+
+  .char-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 0.04em;
+    color: var(--white); margin-bottom: 0.15rem;
+    line-height: 1;
+  }
+
+  .char-aka {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 0.8rem;
+    color: var(--gold); margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .char-divider {
+    width: 30px; height: 1px;
+    background: rgba(201,168,76,0.3);
+    margin-bottom: 1rem;
+  }
+
+  .char-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem; line-height: 1.75;
+    color: var(--gray-mid); margin-bottom: 1rem;
+  }
+
+  .char-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .char-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.45rem; letter-spacing: 0.15em;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--gray-mid); text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════
+   EXCERPT
+  ═══════════════════════════ */
+  #excerpt {
+    padding: 7rem 3rem;
+    background: radial-gradient(ellipse at 50% 0%, rgba(28,42,53,0.4) 0%, transparent 60%), var(--ink);
+  }
+
+  .excerpt-layout {
+    display: grid;
+    grid-template-columns: 1fr 520px;
+    gap: 5rem;
+    align-items: start;
+    margin-top: 3.5rem;
+  }
+
+  .excerpt-text {
+    padding: 3rem;
+    border: 1px solid rgba(168,197,214,0.1);
+    background: rgba(168,197,214,0.02);
+    position: relative;
+  }
+
+  .excerpt-text::before {
+    content: '"';
+    position: absolute;
+    top: -1.5rem; left: 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem;
+    color: rgba(168,197,214,0.08);
+    line-height: 1;
+  }
+
+  .excerpt-chapter {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.35em;
+    text-transform: uppercase; color: rgba(168,197,214,0.5);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .excerpt-chapter::after {
+    content: ''; flex: 1; height: 1px;
+    background: rgba(168,197,214,0.1);
+  }
+
+  .excerpt-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; line-height: 2;
+    color: var(--gray-mid);
+  }
+  .excerpt-body p { margin-bottom: 1.2rem; }
+  .excerpt-body p strong { color: var(--white); font-weight: 600; }
+  .excerpt-body .thump {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.4em;
+    color: rgba(168,197,214,0.4);
+    display: block; text-align: center;
+    margin: 1rem 0;
+  }
+
+  .excerpt-fade {
+    position: relative;
+  }
+  .excerpt-fade::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, rgba(168,197,214,0.02) 40%, rgba(28,42,53,0.3));
+    pointer-events: none;
+  }
+
+  /* Sidebar */
+  .excerpt-sidebar {}
+
+  .sidebar-card {
+    padding: 2rem;
+    border: 1px solid rgba(201,168,76,0.1);
+    background: rgba(255,255,255,0.02);
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-card h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 0.1em;
+    color: var(--gold); margin-bottom: 1rem;
+  }
+
+  .sidebar-card p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem; line-height: 1.7;
+    color: var(--gray-mid);
+  }
+
+  .what-makes-list {
+    display: flex; flex-direction: column;
+    gap: 0;
+  }
+
+  .wm-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+  }
+
+  .wm-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; color: rgba(201,168,76,0.4);
+    flex-shrink: 0; padding-top: 0.15rem;
+  }
+
+  .wm-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem; line-height: 1.6;
+    color: var(--gray-mid);
+  }
+  .wm-text strong { color: var(--white); }
+
+  /* ═══════════════════════════
+   SEASON ARC
+  ═══════════════════════════ */
+  #arc {
+    padding: 7rem 3rem;
+    background: #0d0a08;
+  }
+
+  .arc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 3.5rem;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.06);
+  }
+
+  .arc-card {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .arc-card:hover { background: rgba(201,168,76,0.03); }
+
+  .arc-season {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; line-height: 1;
+    color: rgba(201,168,76,0.08);
+    margin-bottom: -0.5rem;
+  }
+
+  .arc-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gold-dim);
+    margin-bottom: 0.6rem;
+  }
+
+  .arc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; font-weight: 600;
+    color: var(--white); margin-bottom: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .arc-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.88rem; line-height: 1.7;
+    color: var(--gray-mid); font-style: italic;
+  }
+
+  .arc-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .arc-card:hover::after { transform: scaleX(1); }
+
+  /* ═══════════════════════════
+   VISUAL IDENTITY
+  ═══════════════════════════ */
+  #visual {
+    padding: 7rem 3rem;
+    background: radial-gradient(ellipse at 80% 50%, rgba(26,10,46,0.3) 0%, transparent 60%), var(--ink);
+  }
+
+  .visual-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .vis-card {
+    padding: 2rem;
+    border: 1px solid rgba(201,168,76,0.08);
+    background: rgba(255,255,255,0.015);
+    transition: all 0.3s;
+  }
+  .vis-card:hover {
+    border-color: rgba(201,168,76,0.2);
+    background: rgba(201,168,76,0.025);
+  }
+
+  .vis-card h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 0.15em;
+    color: var(--gold); margin-bottom: 1.2rem;
+  }
+
+  .vis-card ul { list-style: none; }
+  .vis-card ul li {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem; line-height: 1.8;
+    color: var(--gray-mid); padding: 0.2rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    display: flex; gap: 0.8rem; align-items: flex-start;
+  }
+  .vis-card ul li::before {
+    content: '—';
+    color: rgba(201,168,76,0.3);
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* Palette Row */
+  .palette-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .swatch {
+    aspect-ratio: 1;
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 0.8rem;
+  }
+  .swatch-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.45rem; letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.2rem;
+  }
+  .swatch-use {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 0.7rem;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ═══════════════════════════
+   CLOSING CTA
+  ═══════════════════════════ */
+  #closing {
+    padding: 8rem 3rem;
+    background: linear-gradient(to bottom, #0d0a08, var(--cosmic));
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+
+  .closing-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(168,197,214,0.04) 0%, transparent 65%);
+  }
+
+  .closing-inner { position: relative; z-index: 2; }
+
+  .closing-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--white); margin-bottom: 1rem;
+    font-weight: 300;
+  }
+
+  .closing-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--gray-mid);
+    margin-bottom: 3rem;
+  }
+
+  .closing-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 2rem auto;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #050403;
+    padding: 4rem 3rem 2rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 2rem;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; letter-spacing: 0.1em;
+    color: var(--gold); opacity: 0.4;
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.2em;
+    color: var(--gray-mid); text-align: center;
+  }
+  .footer-nav {
+    display: flex; gap: 2rem;
+  }
+  .footer-nav a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gray-mid);
+    text-decoration: none; transition: color 0.3s;
+  }
+  .footer-nav a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .showcase-grid { grid-template-columns: 300px 1fr; gap: 3rem; }
+    .excerpt-layout { grid-template-columns: 1fr; }
+    .excerpt-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  }
+  @media (max-width: 900px) {
+    nav { padding: 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .showcase-grid { grid-template-columns: 1fr; }
+    .book-cover-wrap { max-width: 340px; }
+    .book-meta-grid { grid-template-columns: repeat(2, 1fr); }
+    .char-grid { grid-template-columns: 1fr 1fr; }
+    .char-card.lead { grid-column: span 1; }
+    .arc-grid { grid-template-columns: repeat(2, 1fr); }
+    .visual-grid { grid-template-columns: 1fr; }
+    .palette-row { grid-template-columns: repeat(3, 1fr); }
+    #showcase, #characters, #excerpt, #arc, #visual, #closing { padding: 5rem 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    .char-grid, .excerpt-sidebar { grid-template-columns: 1fr; }
+    .arc-grid { grid-template-columns: 1fr; }
+    .palette-row { grid-template-columns: repeat(2, 1fr); }
+    .book-meta-grid { grid-template-columns: 1fr 1fr; }
+    .page-hero { padding: 5rem 1.5rem 4rem; }
+    .book-actions { flex-direction: column; }
+    .btn-primary, .btn-secondary { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">✕ CLOSE</button>
+  <a href="index.html" onclick="toggleMenu()">Home</a>
+  <a href="index.html#updates" onclick="toggleMenu()">Updates</a>
+  <a href="index.html#works" onclick="toggleMenu()">Works</a>
+  <a href="index.html#universe" onclick="toggleMenu()">Universe</a>
+  <a href="index.html#about" onclick="toggleMenu()">About</a>
+  <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- Navigation -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">JAE AILEP</a>
+  <ul class="nav-links">
+    <li><a href="index.html#updates">Updates</a></li>
+    <li><a href="index.html#works">Works</a></li>
+    <li><a href="index.html#universe">Universe</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <canvas id="rain-canvas"></canvas>
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="index.html#works">Works</a>
+      <span>/</span>
+      Novels
+    </div>
+    <h1>
+      <span class="filled">NOVELS</span>
+    </h1>
+    <p class="page-hero-sub">Original fiction. Long-form worlds. Stories that refuse to be small.</p>
+    <div class="hero-divider"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-band">
+  <span class="ticker-inner">
+    THE GAME DOESN'T CARE WHY YOU'RE PLAYING &nbsp;·&nbsp;
+    THE GOAL IS TO LEAVE, NOT TO WIN &nbsp;·&nbsp;
+    THE MATH NEVER WORKS &nbsp;·&nbsp;
+    IN A CITY BUILT ON RAIN, EVERYONE'S DROWNING &nbsp;·&nbsp;
+    ORIGINAL CRIME DRAMA · SEATTLE/TACOMA, WA &nbsp;·&nbsp;
+    JACEN "ACE" GRAYCE · AGE 22 &nbsp;·&nbsp;
+    THE GAME DOESN'T CARE WHY YOU'RE PLAYING &nbsp;·&nbsp;
+    THE GOAL IS TO LEAVE, NOT TO WIN &nbsp;·&nbsp;
+    THE MATH NEVER WORKS &nbsp;·&nbsp;
+    IN A CITY BUILT ON RAIN, EVERYONE'S DROWNING &nbsp;·&nbsp;
+    ORIGINAL CRIME DRAMA · SEATTLE/TACOMA, WA &nbsp;·&nbsp;
+    JACEN "ACE" GRAYCE · AGE 22 &nbsp;·&nbsp;
+  </span>
+</div>
+
+<!-- BOOK SHOWCASE -->
+<section id="showcase">
+  <div class="max-w">
+    <p class="section-label reveal">Now In Development</p>
+    <h2 class="section-title reveal">Featured <em>Novel</em></h2>
+
+    <div class="showcase-grid">
+
+      <!-- COVER -->
+      <div class="book-cover-wrap reveal">
+        <div class="book-cover" id="bookCover">
+          <!-- Rain streaks generated by JS -->
+          <div class="book-cover-rain" id="coverRain"></div>
+
+          <div class="book-cover-top">
+            <div class="cover-label">Original Crime Drama — Season 1</div>
+            <div class="cover-author">Jae Ailep</div>
+          </div>
+
+          <div class="book-cover-center">
+            <svg class="cover-city-art" viewBox="0 0 300 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Seattle skyline silhouette -->
+              <rect x="0" y="80" width="300" height="40" fill="rgba(10,15,20,0.9)"/>
+              <!-- Buildings -->
+              <rect x="8" y="50" width="18" height="30" fill="rgba(168,197,214,0.08)"/>
+              <rect x="30" y="40" width="12" height="40" fill="rgba(168,197,214,0.06)"/>
+              <rect x="46" y="55" width="20" height="25" fill="rgba(168,197,214,0.07)"/>
+              <rect x="70" y="30" width="14" height="50" fill="rgba(168,197,214,0.09)"/>
+              <!-- Space Needle simplified -->
+              <line x1="90" y1="20" x2="90" y2="80" stroke="rgba(168,197,214,0.15)" stroke-width="1.5"/>
+              <ellipse cx="90" cy="38" rx="12" ry="5" fill="rgba(168,197,214,0.08)"/>
+              <line x1="84" y1="20" x2="96" y2="20" stroke="rgba(168,197,214,0.12)" stroke-width="1"/>
+              <!-- More buildings -->
+              <rect x="105" y="45" width="22" height="35" fill="rgba(168,197,214,0.07)"/>
+              <rect x="130" y="35" width="16" height="45" fill="rgba(168,197,214,0.1)"/>
+              <rect x="150" y="50" width="24" height="30" fill="rgba(168,197,214,0.06)"/>
+              <rect x="178" y="42" width="14" height="38" fill="rgba(168,197,214,0.08)"/>
+              <rect x="196" y="55" width="18" height="25" fill="rgba(168,197,214,0.07)"/>
+              <rect x="218" y="38" width="20" height="42" fill="rgba(168,197,214,0.09)"/>
+              <rect x="242" y="48" width="14" height="32" fill="rgba(168,197,214,0.06)"/>
+              <rect x="260" y="35" width="18" height="45" fill="rgba(168,197,214,0.1)"/>
+              <rect x="282" y="55" width="18" height="25" fill="rgba(168,197,214,0.07)"/>
+              <!-- Reflection in water/rain -->
+              <line x1="0" y1="80" x2="300" y2="80" stroke="rgba(168,197,214,0.08)" stroke-width="1"/>
+              <!-- Rain drops -->
+              <line x1="20" y1="0" x2="18" y2="25" stroke="rgba(168,197,214,0.12)" stroke-width="0.5"/>
+              <line x1="55" y1="5" x2="53" y2="30" stroke="rgba(168,197,214,0.1)" stroke-width="0.5"/>
+              <line x1="110" y1="0" x2="108" y2="20" stroke="rgba(168,197,214,0.12)" stroke-width="0.5"/>
+              <line x1="160" y1="8" x2="158" y2="28" stroke="rgba(168,197,214,0.1)" stroke-width="0.5"/>
+              <line x1="220" y1="0" x2="218" y2="22" stroke="rgba(168,197,214,0.12)" stroke-width="0.5"/>
+              <line x1="275" y1="5" x2="273" y2="25" stroke="rgba(168,197,214,0.1)" stroke-width="0.5"/>
+            </svg>
+          </div>
+
+          <div style="text-align:center; position:relative; z-index:2;">
+            <div class="cover-title">
+              RAIN<br>
+              <span class="city">CITY</span>
+            </div>
+          </div>
+
+          <div class="book-cover-bottom">
+            <div class="cover-tagline">In a city built on rain,<br>everyone's drowning.</div>
+            <div class="cover-badge">In Development</div>
+          </div>
+        </div>
+        <div class="cover-shadow"></div>
+      </div>
+
+      <!-- INFO -->
+      <div class="book-info reveal">
+        <div class="book-genre-tags">
+          <span class="genre-tag primary">Crime Drama</span>
+          <span class="genre-tag">Psychological Thriller</span>
+          <span class="genre-tag">Tech Thriller</span>
+          <span class="genre-tag">Novel Series</span>
+        </div>
+
+        <h1 class="book-title-full">
+          RAIN CITY
+          <span class="sub">// Season One Novel</span>
+        </h1>
+
+        <p class="book-tagline">
+          "The goal is to leave, not to win."
+        </p>
+
+        <p class="book-logline">
+          A 22-year-old college dropout — who carries the knowledge of a business school 
+          graduate without the diploma — becomes the most dangerous player 
+          <strong>no one sees coming.</strong> Not because he wants power. 
+          Because he needs to solve one finite math problem: save his family and disappear.
+          But in a world where everyone wants a piece of him, 
+          <strong>leaving might be the one thing he can't do.</strong>
+        </p>
+
+        <div class="book-meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Setting</div>
+            <div class="meta-value">Seattle / Tacoma</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Time Period</div>
+            <div class="meta-value">2010s–Present</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Genre</div>
+            <div class="meta-value">Crime Drama</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Status</div>
+            <div class="meta-value">In Development</div>
+          </div>
+        </div>
+
+        <div class="the-problem">
+          <div class="problem-label">// The Problem — $94,770</div>
+          <div class="problem-rows">
+            <div class="problem-row">
+              <span class="p-item">Uncle Raymond's Bail</span>
+              <span class="p-val">$75,000</span>
+            </div>
+            <div class="problem-row">
+              <span class="p-item">Competent Legal Defense</span>
+              <span class="p-val">$18,000</span>
+            </div>
+            <div class="problem-row">
+              <span class="p-item">Immediate Family Bills</span>
+              <span class="p-val">$1,770</span>
+            </div>
+          </div>
+          <div class="problem-total">
+            <span class="p-label">Total Needed — Then He's Out</span>
+            <span class="p-total">$94,770</span>
+          </div>
+          <p class="problem-note">That's the plan. That's always the plan.</p>
+        </div>
+
+        <div class="book-actions">
+          <a href="#excerpt" class="btn-primary">Read Chapter One</a>
+          <a href="index.html#contact" class="btn-secondary">Stay Updated</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CHARACTERS -->
+<section id="characters">
+  <div class="max-w">
+    <p class="section-label reveal">The Players</p>
+    <h2 class="section-title reveal">Meet the <em>Characters</em></h2>
+
+    <div class="char-grid">
+
+      <!-- ACE — lead card spans 2 -->
+      <div class="char-card lead reveal">
+        <div class="char-role">Protagonist</div>
+        <div class="char-name">Jacen Grayce</div>
+        <div class="char-aka">"Ace" &nbsp;·&nbsp; Age 22 &nbsp;·&nbsp; Security Guard / Strategic Operator</div>
+        <div class="char-divider"></div>
+        <p class="char-desc">
+          Business-school educated without the diploma — he chose his grandmother's medical bills over 
+          finishing the paperwork at 18. Works warehouse security. Thinks in systems, spreadsheets, and 
+          three steps ahead. He doesn't move like a dealer. No pattern. No routine. He blends corporate 
+          strategy with street tactics in ways no one expects. Police see a clean-record college kid. 
+          The streets see a dropout playing gangster. His family sees the good son. 
+          <em>Nobody sees the real Ace.</em>
+        </p>
+        <div class="char-tags">
+          <span class="char-tag">Analytical</span>
+          <span class="char-tag">Code-Switcher</span>
+          <span class="char-tag">Underestimated</span>
+          <span class="char-tag">Panic Attacks</span>
+          <span class="char-tag">Invisible</span>
+          <span class="char-tag">Breaking</span>
+        </div>
+      </div>
+
+      <!-- MARCUS -->
+      <div class="char-card reveal">
+        <div class="char-role">Best Friend &amp; Partner</div>
+        <div class="char-name">Marcus Rivers</div>
+        <div class="char-aka">"Marc" &nbsp;·&nbsp; Age 23</div>
+        <div class="char-divider"></div>
+        <p class="char-desc">
+          The FACE to Ace's BRAIN. Loud, flashy, loyal to a fault. Impulsive in ways that terrify 
+          Ace. They've been inseparable since 7th grade. His recklessness will eventually 
+          threaten everything.
+        </p>
+        <div class="char-tags">
+          <span class="char-tag">Loyal</span>
+          <span class="char-tag">Impulsive</span>
+          <span class="char-tag">The Face</span>
+        </div>
+      </div>
+
+      <!-- KEISHA -->
+      <div class="char-card reveal">
+        <div class="char-role">Girlfriend</div>
+        <div class="char-name">Keisha Bradley</div>
+        <div class="char-aka">Age 22 &nbsp;·&nbsp; UW Psychology</div>
+        <div class="char-divider"></div>
+        <p class="char-desc">
+          One year from graduating. Studies identity performance — and is watching it happen in real-time 
+          in the man she loves. Represents the life Ace could have. Her morals will be tested when 
+          she unknowingly benefits from his money.
+        </p>
+        <div class="char-tags">
+          <span class="char-tag">Perceptive</span>
+          <span class="char-tag">Moral</span>
+          <span class="char-tag">In the Dark</span>
+        </div>
+      </div>
+
+      <!-- GRANDMA -->
+      <div class="char-card reveal">
+        <div class="char-role">The Reason</div>
+        <div class="char-name">Grandma</div>
+        <div class="char-aka">Age 67 &nbsp;·&nbsp; The Anchor</div>
+        <div class="char-divider"></div>
+        <p class="char-desc">
+          Survived the crack epidemic. Raised Ashiya alone. Her authority lives in the set of her 
+          shoulders. She knows more than she says — suspects everything — but won't say it out loud.
+          Her declining health is the guilt that drives every one of Ace's decisions.
+        </p>
+        <div class="char-tags">
+          <span class="char-tag">Survivor</span>
+          <span class="char-tag">Knows</span>
+          <span class="char-tag">The Weight</span>
+        </div>
+      </div>
+
+      <!-- DETECTIVE CHEN -->
+      <div class="char-card reveal">
+        <div class="char-role">Antagonist</div>
+        <div class="char-name">Det. Sarah Chen</div>
+        <div class="char-aka">Age 34 &nbsp;·&nbsp; Major Crimes / Narcotics</div>
+        <div class="char-divider"></div>
+        <p class="char-desc">
+          Asian-American, grew up in Rainier Valley. Not corrupt. Smart enough to match Ace move for move. 
+          Her younger brother died of a fentanyl OD. Patient. Building her case. 
+          Getting closer. She's not wrong — she's just closing in.
+        </p>
+        <div class="char-tags">
+          <span class="char-tag">Obsessed</span>
+          <span class="char-tag">Not Wrong</span>
+          <span class="char-tag">Closing In</span>
+        </div>
+      </div>
+
+      <!-- LO -->
+      <div class="char-card reveal">
+        <div class="char-role">Threat</div>
+        <div class="char-name">Curtis Lorenzo</div>
+        <div class="char-aka">"Lo" &nbsp;·&nbsp; Established Player</div>
+        <div class="char-divider"></div>
+        <p class="char-desc">
+          The established dealer whose territory Ace is quietly cutting into. When he discovers 
+          it's Ace — someone he considers beneath him — it stops being business. 
+          It becomes personal.
+        </p>
+        <div class="char-tags">
+          <span class="char-tag">Territorial</span>
+          <span class="char-tag">Violent</span>
+          <span class="char-tag">Disrespected</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER EXCERPT -->
+<section id="excerpt">
+  <div class="max-w">
+    <p class="section-label reveal">First Pages</p>
+    <h2 class="section-title reveal">Chapter One — <em>The Heartbeat</em></h2>
+
+    <div class="excerpt-layout">
+
+      <!-- EXCERPT TEXT -->
+      <div class="reveal">
+        <div class="excerpt-text excerpt-fade">
+          <div class="excerpt-chapter">Chapter One — The Heartbeat</div>
+          <div class="excerpt-body">
+            <p>The heartbeat came first.</p>
+            <p>Not the metaphorical kind. Not the poetic kind that people meant when they said <em>follow your heart</em>. A physical thump, low and stubborn, running under everything like a second bassline the world couldn't mute.</p>
+            <p>Ace felt it in his throat before he heard it anywhere else. A pulse pushing against his windpipe every time he swallowed. A slow, deliberate percussion that made his body feel like a machine running without permission.</p>
+            <span class="thump">THUMP.</span>
+            <p>He stared at the security monitors and tried to pretend it was just the hum of the lights, the rain on the windows, the ancient HVAC cycling like it was clearing its lungs.</p>
+            <span class="thump">THUMP.</span>
+            <p>The warehouse camera feeds rotated through their loop: aisle three, aisle four, loading dock, employee lot. Gray. Grainy. Empty.</p>
+            <p>His eyes kept doing what they always did on third shift: scanning for motion, scanning for shapes, scanning for the one pixel that might change and force him to move. He could do it in his sleep.</p>
+            <p>Tonight his posture was perfect.</p>
+            <p><strong>That was the problem.</strong></p>
+            <p>Perfect posture meant tension. Tension meant the body knew something the mind was refusing to name.</p>
+            <span class="thump">THUMP.</span>
+            <p>His phone sat hidden in his lap below the desk line, brightness turned down until the screen was more bruise than light. He'd tested the camera angles months ago. <strong>Every job had rules. Every job had loopholes.</strong></p>
+            <p>He already knew what the text said. He'd read it three times. He kept reading it anyway. Because rereading didn't cost anything. Because rereading was something he could control.</p>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem; display:flex; gap:1rem;">
+          <a href="#" class="btn-primary" style="pointer-events:none; opacity:0.4; cursor:not-allowed;">Full Chapter — Coming Soon</a>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="excerpt-sidebar reveal">
+
+        <div class="sidebar-card">
+          <h4>// What Makes This Different</h4>
+          <div class="what-makes-list">
+            <div class="wm-item">
+              <span class="wm-num">01</span>
+              <span class="wm-text"><strong>The goal is to leave, not to win.</strong> Ace doesn't want an empire. He wants to solve $94,770 and disappear.</span>
+            </div>
+            <div class="wm-item">
+              <span class="wm-num">02</span>
+              <span class="wm-text"><strong>Psychological thriller elements.</strong> Panic attacks. Insomnia. Code-switching trauma. The horror of watching a good man fracture.</span>
+            </div>
+            <div class="wm-item">
+              <span class="wm-num">03</span>
+              <span class="wm-text"><strong>Digital age cat-and-mouse.</strong> Encrypted apps, crypto, gig economy exploitation vs. financial tracking and surveillance tech.</span>
+            </div>
+            <div class="wm-item">
+              <span class="wm-num">04</span>
+              <span class="wm-text"><strong>Hyper-realistic math.</strong> Actual numbers. Actual consequences. The grind isn't glamorous. Violence isn't cool.</span>
+            </div>
+            <div class="wm-item">
+              <span class="wm-num">05</span>
+              <span class="wm-text"><strong>A good man doing bad things.</strong> He throws up after violence. He cries alone in his car. He goes to church and feels like a hypocrite.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card" style="margin-top:1.5rem;">
+          <h4>// Series Overview</h4>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:0.9rem; line-height:1.75; color:var(--gray-mid); font-style:italic;">
+            "The game doesn't care why you're playing."
+            <br><br>
+            Rain City is a multi-season novel series following Ace's descent from small-time problem-solver 
+            to a player so deep in the game he can no longer see the exit — even as he keeps reaching for it.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEASON ARC -->
+<section id="arc">
+  <div class="max-w">
+    <p class="section-label reveal">The Road Ahead</p>
+    <h2 class="section-title reveal">Multi-Season <em>Arc</em></h2>
+
+    <div class="arc-grid reveal">
+
+      <div class="arc-card">
+        <div class="arc-season">S1</div>
+        <div class="arc-label">Phase One</div>
+        <div class="arc-title">The Organic Start</div>
+        <p class="arc-desc">
+          Weed, pills, small-time hustling. Learning the infrastructure and the players. 
+          The slow realization that small-time will never be enough.
+        </p>
+      </div>
+
+      <div class="arc-card">
+        <div class="arc-season">S2</div>
+        <div class="arc-label">Phase Two</div>
+        <div class="arc-title">Marcus's Connect</div>
+        <p class="arc-desc">
+          Real product. Real stakes. $8–15K per month. 
+          Junior's limitations become clear. Elena's name is whispered for the first time.
+        </p>
+      </div>
+
+      <div class="arc-card">
+        <div class="arc-season">S3</div>
+        <div class="arc-label">Phase Three</div>
+        <div class="arc-title">Someone From the Past</div>
+        <p class="arc-desc">
+          Troy connects Ace to Elena. Serious money — $20–30K per month. 
+          Ace passes Elena's test. He's about to enter the real game.
+        </p>
+      </div>
+
+      <div class="arc-card">
+        <div class="arc-season">S4</div>
+        <div class="arc-label">Phase Four</div>
+        <div class="arc-title">Too Deep To Leave</div>
+        <p class="arc-desc">
+          Real player. Cartel connections. Big money, bigger problems. 
+          Everything collapses. The exit is no longer a door.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL IDENTITY -->
+<section id="visual">
+  <div class="max-w">
+    <p class="section-label reveal">Tonal Identity</p>
+    <h2 class="section-title reveal">What It <em>Feels Like</em></h2>
+
+    <div class="palette-row reveal">
+      <div class="swatch" style="background:#1c3a4a;">
+        <div class="swatch-name">Grays &amp; Blues</div>
+        <div class="swatch-use">Seattle Aesthetic</div>
+      </div>
+      <div class="swatch" style="background:#f2f0eb; color:#111;">
+        <div class="swatch-name" style="color:#555;">Fluorescent White</div>
+        <div class="swatch-use" style="color:#777;">Institutional</div>
+      </div>
+      <div class="swatch" style="background:#7a4a1a;">
+        <div class="swatch-name">Warm Amber</div>
+        <div class="swatch-use">Family · Sanctuary</div>
+      </div>
+      <div class="swatch" style="background:#0a2e1e;">
+        <div class="swatch-name">Neon in Rain</div>
+        <div class="swatch-use">Night Operations</div>
+      </div>
+      <div class="swatch" style="background:#282626;">
+        <div class="swatch-name">Desaturated</div>
+        <div class="swatch-use">Moral Ambiguity</div>
+      </div>
+    </div>
+
+    <div class="visual-grid">
+      <div class="vis-card reveal">
+        <h4>Cinematographic Writing</h4>
+        <ul>
+          <li>Rain always present — the visual heartbeat</li>
+          <li>Ace framed through barriers: glass, distance, rain</li>
+          <li>Surveillance POV — always being watched</li>
+          <li>Mirrors — which version of Ace is real?</li>
+          <li>Tight framing during code-switching (claustrophobic)</li>
+          <li>Wide shots of Seattle — gentrification in motion</li>
+        </ul>
+      </div>
+      <div class="vis-card reveal">
+        <h4>Recurring Motifs</h4>
+        <ul>
+          <li>The heartbeat — tension before the mind admits it</li>
+          <li>Rain — washes away evidence, not choices</li>
+          <li>Numbers — Ace's brain never stops calculating</li>
+          <li>Parking lots at 3 AM — the only place he's unmasked</li>
+          <li>Church pews — guilt made architectural</li>
+          <li>Spreadsheets — the language underneath everything</li>
+        </ul>
+      </div>
+      <div class="vis-card reveal">
+        <h4>What This Series Is</h4>
+        <ul>
+          <li>The good man doing bad things for good reasons</li>
+          <li>The exit that keeps getting further away</li>
+          <li>Code-switching as a form of violence</li>
+          <li>The math that never adds up to safety</li>
+          <li>Love that can't survive in darkness</li>
+          <li>The system as the real villain</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section id="closing">
+  <div class="closing-glow"></div>
+  <div class="closing-inner reveal">
+    <p class="closing-sub">Rain City — Original Novel Series by Jae Ailep</p>
+    <div class="closing-divider"></div>
+    <h2 class="closing-title">
+      "In a city built on rain,<br>everyone's drowning."
+    </h2>
+    <div class="closing-divider"></div>
+    <p class="closing-sub" style="margin-top:0; margin-bottom:2.5rem;">Stay updated. The first novel is coming.</p>
+    <a href="index.html#contact" class="btn-primary">Get Notified</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">JAE AILEP</div>
+    <nav class="footer-nav">
+      <a href="index.html">Home</a>
+      <a href="index.html#works">Works</a>
+      <a href="index.html#universe">Universe</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <p class="footer-copy">
+      © 2026 Jae-Mier Ailep / Jae Ailep — All Rights Reserved<br>
+      All works, stories, characters, and universes are original intellectual property of Jae Ailep.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // ── Cursor ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 4 + 'px';
+    cursor.style.top  = my - 4 + 'px';
+  });
+  (function animRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx - 16 + 'px';
+    ring.style.top  = ry - 16 + 'px';
+    requestAnimationFrame(animRing);
+  })();
+  document.querySelectorAll('a, button, .char-card, .arc-card, .vis-card, .sidebar-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; ring.style.opacity = '1'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; ring.style.opacity = '0.6'; });
+  });
+
+  // ── Rain canvas (hero) ──
+  const canvas = document.getElementById('rain-canvas');
+  const ctx = canvas.getContext('2d');
+  let drops = [];
+  function resizeRain() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    drops = [];
+    const count = Math.floor(canvas.width / 10);
+    for (let i = 0; i < count; i++) {
+      drops.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        speed: 3 + Math.random() * 5,
+        len: 8 + Math.random() * 15,
+        op: 0.1 + Math.random() * 0.35
+      });
+    }
+  }
+  function drawRain() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drops.forEach(d => {
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x - 1, d.y + d.len);
+      ctx.strokeStyle = `rgba(168,197,214,${d.op})`;
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+      d.y += d.speed;
+      if (d.y > canvas.height) { d.y = -d.len; d.x = Math.random() * canvas.width; }
+    });
+    requestAnimationFrame(drawRain);
+  }
+  resizeRain();
+  window.addEventListener('resize', resizeRain);
+  drawRain();
+
+  // ── Book cover rain streaks ──
+  const coverRain = document.getElementById('coverRain');
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'cover-rain-line';
+    const h = 20 + Math.random() * 60;
+    el.style.cssText = `
+      left:${Math.random()*100}%;
+      top:0; bottom:0;
+      height:${h}%;
+      --d:${1.5 + Math.random() * 2.5}s;
+      --delay:${Math.random() * 2}s;
+      opacity:${0.1 + Math.random() * 0.25};
+    `;
+    coverRain.appendChild(el);
+  }
+
+  // ── Nav scroll ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Mobile menu ──
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // ── Scroll reveal ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
+
+</body>
+</html>
