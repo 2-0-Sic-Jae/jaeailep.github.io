@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spirit Majic — Clans of the Hidden Axis</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #D4A017;
+    --gold-light: #F0C040;
+    --obsidian: #0A0A0F;
+    --void: #050508;
+    --crimson: #8B0000;
+    --crimson-bright: #CC1111;
+    --spirit-blue: #1A3A6B;
+    --spirit-cyan: #00D4FF;
+    --spirit-white: #F0EEDD;
+    --ash: #2A2A35;
+    --mist: rgba(212,160,23,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--spirit-white);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 1.2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(5,5,8,0.97) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(212,160,23,0.12);
+    backdrop-filter: blur(4px);
+  }
+
+  .nav-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    text-shadow: 0 0 20px rgba(212,160,23,0.5);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: rgba(240,238,221,0.65);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s, text-shadow 0.3s;
+  }
+
+  .nav-links a:hover {
+    color: var(--gold-light);
+    text-shadow: 0 0 12px rgba(212,160,23,0.7);
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 8rem 2rem 4rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 50% 40%, rgba(139,0,0,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 30% 60%, rgba(26,58,107,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 70% 30%, rgba(212,160,23,0.08) 0%, transparent 65%),
+      linear-gradient(180deg, #050508 0%, #0A0A0F 50%, #060408 100%);
+  }
+
+  /* Animated glyph rings */
+  .glyph-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+    animation: rotateRing linear infinite;
+  }
+
+  .ring-1 {
+    width: 550px; height: 550px;
+    border-color: rgba(212,160,23,0.07);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation-duration: 60s;
+  }
+
+  .ring-2 {
+    width: 380px; height: 380px;
+    border-color: rgba(139,0,0,0.1);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation-duration: 40s;
+    animation-direction: reverse;
+  }
+
+  .ring-3 {
+    width: 700px; height: 700px;
+    border-color: rgba(26,58,107,0.06);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation-duration: 90s;
+  }
+
+  @keyframes rotateRing {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Particle dots */
+  .particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: floatParticle linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes floatParticle {
+    0% { opacity: 0; transform: translateY(0) scale(0); }
+    20% { opacity: 0.8; }
+    80% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+  }
+
+  /* Ankh symbol */
+  .hero-symbol {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    animation: pulseGold 3s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+    display: block;
+  }
+
+  @keyframes pulseGold {
+    0%, 100% { text-shadow: 0 0 20px rgba(212,160,23,0.6), 0 0 40px rgba(212,160,23,0.3); }
+    50% { text-shadow: 0 0 40px rgba(212,160,23,0.9), 0 0 80px rgba(212,160,23,0.5), 0 0 120px rgba(139,0,0,0.3); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 1.2s ease forwards;
+    opacity: 0;
+    animation-delay: 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--spirit-white);
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 1.2s ease forwards;
+    opacity: 0;
+    animation-delay: 0.6s;
+    text-shadow: 0 0 60px rgba(212,160,23,0.2);
+  }
+
+  .hero-title span.gold { color: var(--gold); text-shadow: 0 0 30px rgba(212,160,23,0.6); }
+  .hero-title span.void { color: #4A3A5A; }
+
+  .hero-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    letter-spacing: 0.3em;
+    color: rgba(240,238,221,0.5);
+    text-transform: uppercase;
+    margin-top: 1rem;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 1.2s ease forwards;
+    opacity: 0;
+    animation-delay: 0.9s;
+  }
+
+  .hero-tagline {
+    font-style: italic;
+    font-size: 1.3rem;
+    color: rgba(212,160,23,0.7);
+    margin-top: 2rem;
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 1.2s ease forwards;
+    opacity: 0;
+    animation-delay: 1.2s;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 1.2s ease forwards;
+    opacity: 0;
+    animation-delay: 1.5s;
+  }
+
+  .btn-primary {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%);
+    color: var(--obsidian);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 700;
+    transition: all 0.3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+    box-shadow: 0 0 30px rgba(212,160,23,0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    background: transparent;
+    color: var(--spirit-white);
+    border: 1px solid rgba(240,238,221,0.3);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 20px rgba(212,160,23,0.2);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    animation: fadeSlideUp 1.5s ease forwards 2s, bounce 2s ease-in-out 3.5s infinite;
+    opacity: 0;
+  }
+
+  .scroll-indicator span {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.4em;
+    color: rgba(212,160,23,0.4);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, rgba(212,160,23,0.6) 0%, transparent 100%);
+    animation: scrollLine 2s ease-in-out infinite 3.5s;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.6; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── SECTION BASE ── */
+  section { position: relative; }
+
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212,160,23,0.3), rgba(139,0,0,0.2), transparent);
+  }
+
+  .glyph-divider {
+    text-align: center;
+    padding: 1.5rem 0;
+    color: var(--gold);
+    font-size: 1.2rem;
+    opacity: 0.5;
+    letter-spacing: 1em;
+  }
+
+  /* ── WORLD SECTION ── */
+  #world {
+    padding: 8rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.6em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    color: var(--spirit-white);
+  }
+
+  .section-title .accent { color: var(--gold); }
+
+  .world-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+    margin-top: 4rem;
+  }
+
+  .world-text p {
+    color: rgba(240,238,221,0.78);
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .world-text .pull-quote {
+    border-left: 3px solid var(--gold);
+    padding-left: 1.5rem;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: rgba(212,160,23,0.8);
+    margin: 2rem 0;
+    line-height: 1.5;
+  }
+
+  .world-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, rgba(212,160,23,0.06) 0%, rgba(139,0,0,0.04) 100%);
+    border: 1px solid rgba(212,160,23,0.15);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  .stat-card:hover {
+    border-color: rgba(212,160,23,0.4);
+    box-shadow: 0 0 30px rgba(212,160,23,0.08);
+    transform: translateY(-3px);
+  }
+
+  .stat-card .stat-val {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-card .stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(240,238,221,0.45);
+  }
+
+  .stat-card .stat-detail {
+    font-size: 0.85rem;
+    color: rgba(240,238,221,0.55);
+    margin-top: 0.5rem;
+  }
+
+  /* ── NATIONS ── */
+  #nations {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, transparent, rgba(212,160,23,0.02) 50%, transparent);
+  }
+
+  .nations-header {
+    text-align: center;
+    padding: 0 4rem 4rem;
+  }
+
+  .nations-scroll {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+  }
+
+  .nation-card {
+    position: relative;
+    padding: 3rem 2rem;
+    border-right: 1px solid rgba(240,238,221,0.06);
+    overflow: hidden;
+    cursor: default;
+    transition: all 0.5s;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .nation-card:last-child { border-right: none; }
+
+  .nation-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .nation-karai::before { background: radial-gradient(ellipse at 50% 80%, rgba(139,0,0,0.3) 0%, transparent 70%); }
+  .nation-mizuchi::before { background: radial-gradient(ellipse at 50% 80%, rgba(26,58,107,0.3) 0%, transparent 70%); }
+  .nation-tianfeng::before { background: radial-gradient(ellipse at 50% 80%, rgba(100,160,220,0.2) 0%, transparent 70%); }
+  .nation-doro::before { background: radial-gradient(ellipse at 50% 80%, rgba(101,67,33,0.3) 0%, transparent 70%); }
+  .nation-ankh::before { background: radial-gradient(ellipse at 50% 80%, rgba(212,160,23,0.2) 0%, transparent 70%); }
+
+  .nation-card:hover::before { opacity: 1; }
+  .nation-card:hover { background: rgba(240,238,221,0.02); }
+
+  .nation-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    transition: transform 0.4s;
+  }
+
+  .nation-card:hover .nation-icon { transform: scale(1.2) translateY(-5px); }
+
+  .nation-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s;
+  }
+
+  .nation-karai .nation-name { color: #CC4422; }
+  .nation-mizuchi .nation-name { color: #4488BB; }
+  .nation-tianfeng .nation-name { color: #88BBDD; }
+  .nation-doro .nation-name { color: #AA8855; }
+  .nation-ankh .nation-name { color: var(--gold); }
+
+  .nation-element {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(240,238,221,0.35);
+    margin-bottom: 1rem;
+  }
+
+  .nation-desc {
+    font-size: 0.88rem;
+    color: rgba(240,238,221,0.55);
+    line-height: 1.6;
+  }
+
+  .nation-style {
+    margin-top: 1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid rgba(240,238,221,0.12);
+    display: inline-block;
+    color: rgba(240,238,221,0.4);
+    transition: all 0.3s;
+  }
+
+  .nation-card:hover .nation-style { border-color: rgba(212,160,23,0.3); color: rgba(212,160,23,0.7); }
+
+  /* ── CHARACTERS ── */
+  #characters {
+    padding: 8rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .char-header { margin-bottom: 5rem; }
+
+  .characters-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .char-card {
+    position: relative;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(15,12,20,0.9) 0%, rgba(10,10,15,0.9) 100%);
+    border: 1px solid rgba(212,160,23,0.08);
+    overflow: hidden;
+    transition: all 0.4s;
+    cursor: default;
+  }
+
+  .char-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .char-kheru { --char-color: #D4A017; }
+  .char-lizahra { --char-color: #4FC3F7; }
+  .char-kairo { --char-color: #8D6E63; }
+  .char-naveen { --char-color: #81C784; }
+
+  .char-card::after { color: var(--char-color); }
+  .char-card:hover::after { opacity: 0.8; }
+
+  .char-card:hover {
+    border-color: rgba(212,160,23,0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    transform: translateY(-4px);
+  }
+
+  .char-glow {
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--char-color), transparent 70%);
+    opacity: 0.05;
+    transition: opacity 0.4s;
+  }
+
+  .char-card:hover .char-glow { opacity: 0.12; }
+
+  .char-number {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 4rem;
+    color: var(--char-color);
+    opacity: 0.1;
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    line-height: 1;
+    font-weight: 900;
+  }
+
+  .char-title-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    color: var(--char-color);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+  }
+
+  .char-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.4rem;
+    color: var(--spirit-white);
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
+  }
+
+  .char-alias {
+    font-style: italic;
+    color: var(--char-color);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.85;
+  }
+
+  .char-meta {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .char-meta-item span:first-child {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,238,221,0.35);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .char-meta-item span:last-child {
+    font-size: 0.9rem;
+    color: rgba(240,238,221,0.7);
+  }
+
+  .char-spirit {
+    background: rgba(212,160,23,0.04);
+    border: 1px solid rgba(212,160,23,0.1);
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .char-spirit-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(212,160,23,0.5);
+    margin-bottom: 0.4rem;
+  }
+
+  .char-spirit-name {
+    color: var(--char-color);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .char-desc {
+    font-size: 0.95rem;
+    color: rgba(240,238,221,0.6);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .char-abilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .ability-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(240,238,221,0.1);
+    color: rgba(240,238,221,0.4);
+    transition: all 0.3s;
+  }
+
+  .char-card:hover .ability-tag {
+    border-color: rgba(212,160,23,0.2);
+    color: rgba(240,238,221,0.6);
+  }
+
+  /* ── ARCS ── */
+  #arcs {
+    padding: 8rem 4rem;
+    background: linear-gradient(180deg, transparent, rgba(139,0,0,0.04) 50%, transparent);
+  }
+
+  .arcs-inner { max-width: 1400px; margin: 0 auto; }
+
+  .arcs-header { text-align: center; margin-bottom: 5rem; }
+
+  .arcs-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .arcs-timeline::before {
+    content: '';
+    position: absolute;
+    left: 80px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(212,160,23,0.3) 10%, rgba(212,160,23,0.3) 90%, transparent);
+  }
+
+  .arc-item {
+    display: flex;
+    gap: 3rem;
+    padding: 2.5rem 0;
+    position: relative;
+    border-bottom: 1px solid rgba(240,238,221,0.04);
+    transition: all 0.4s;
+    cursor: default;
+  }
+
+  .arc-item:hover { background: rgba(212,160,23,0.02); padding-left: 1rem; }
+
+  .arc-number-wrapper {
+    flex-shrink: 0;
+    width: 80px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0.3rem;
+  }
+
+  .arc-number {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    position: relative;
+    z-index: 1;
+  }
+
+  .arc-dot {
+    position: absolute;
+    left: 80px;
+    top: 2.8rem;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--gold);
+    transform: translateX(-4px);
+    box-shadow: 0 0 10px rgba(212,160,23,0.5);
+    transition: all 0.3s;
+  }
+
+  .arc-item:hover .arc-dot { box-shadow: 0 0 20px rgba(212,160,23,0.8); transform: translateX(-4px) scale(1.4); }
+
+  .arc-content { flex: 1; }
+
+  .arc-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 0.4rem;
+  }
+
+  .arc-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.4rem;
+    color: var(--spirit-white);
+    margin-bottom: 0.5rem;
+  }
+
+  .arc-tagline {
+    font-style: italic;
+    color: rgba(212,160,23,0.65);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .arc-desc {
+    font-size: 0.95rem;
+    color: rgba(240,238,221,0.55);
+    max-width: 700px;
+    line-height: 1.7;
+  }
+
+  .arc-reveal {
+    margin-top: 0.8rem;
+    font-size: 0.88rem;
+    color: rgba(139,0,0,0.7);
+    font-style: italic;
+  }
+
+  /* ── POWER SYSTEM ── */
+  #power {
+    padding: 8rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .power-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+
+  .power-card {
+    background: linear-gradient(135deg, rgba(15,12,20,0.95), rgba(10,10,15,0.95));
+    border: 1px solid rgba(212,160,23,0.1);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .power-card:hover {
+    border-color: rgba(212,160,23,0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+
+  .power-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .power-card:hover::before { opacity: 1; }
+
+  .power-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+
+  .power-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+
+  .power-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,238,221,0.3);
+    margin-bottom: 1rem;
+  }
+
+  .power-desc {
+    font-size: 0.92rem;
+    color: rgba(240,238,221,0.6);
+    line-height: 1.7;
+  }
+
+  /* Sparc tiers */
+  .sparc-tiers {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(212,160,23,0.1);
+    overflow: hidden;
+  }
+
+  .tier {
+    flex: 1;
+    padding: 1.5rem;
+    border-right: 1px solid rgba(212,160,23,0.08);
+    transition: all 0.3s;
+  }
+
+  .tier:last-child { border-right: none; }
+  .tier:hover { background: rgba(212,160,23,0.04); }
+
+  .tier-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .tier-users {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.3rem;
+    color: var(--spirit-white);
+    margin-bottom: 0.3rem;
+  }
+
+  .tier-desc {
+    font-size: 0.8rem;
+    color: rgba(240,238,221,0.45);
+  }
+
+  /* ── PITCH QUOTE ── */
+  #pitch {
+    padding: 10rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pitch-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(139,0,0,0.12) 0%, transparent 70%),
+      linear-gradient(180deg, transparent, rgba(212,160,23,0.03) 50%, transparent);
+  }
+
+  .pitch-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .pitch-quote-mark {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 8rem;
+    color: var(--gold);
+    opacity: 0.08;
+    line-height: 0.5;
+    display: block;
+    margin-bottom: 2rem;
+  }
+
+  .pitch-text {
+    font-style: italic;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    color: rgba(240,238,221,0.85);
+    line-height: 1.5;
+    margin-bottom: 2rem;
+  }
+
+  .pitch-comparison {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 4rem;
+    border-top: 1px solid rgba(212,160,23,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    background: rgba(5,5,8,0.8);
+  }
+
+  .footer-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(212,160,23,0.4);
+  }
+
+  .footer-tagline {
+    font-style: italic;
+    color: rgba(212,160,23,0.4);
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,238,221,0.35);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  .footer-copy {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(240,238,221,0.2);
+    text-align: right;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    #world { padding: 5rem 1.5rem; }
+    .world-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .nations-scroll { grid-template-columns: 1fr 1fr; }
+    .nation-card { border-right: none; border-bottom: 1px solid rgba(240,238,221,0.06); }
+    .characters-grid { grid-template-columns: 1fr; }
+    #arcs { padding: 5rem 1.5rem; }
+    .arcs-timeline::before { left: 40px; }
+    .arc-number-wrapper { width: 40px; }
+    .arc-dot { left: 40px; }
+    .power-grid { grid-template-columns: 1fr; }
+    .sparc-tiers { flex-direction: column; }
+    .tier { border-right: none; border-bottom: 1px solid rgba(212,160,23,0.08); }
+    #pitch { padding: 6rem 1.5rem; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-copy { text-align: center; }
+    #characters { padding: 5rem 1.5rem; }
+    #power { padding: 5rem 1.5rem; }
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .nations-scroll { grid-template-columns: 1fr; }
+    .world-stats { grid-template-columns: 1fr; }
+    .hero-cta { flex-direction: column; align-items: center; }
+  }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <a href="#hero" class="nav-logo">Spirit Majic</a>
+  <ul class="nav-links">
+    <li><a href="#world">The World</a></li>
+    <li><a href="#nations">The Nations</a></li>
+    <li><a href="#characters">The Pack</a></li>
+    <li><a href="#arcs">The Arcs</a></li>
+    <li><a href="#power">Power System</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="glyph-ring ring-1"></div>
+  <div class="glyph-ring ring-2"></div>
+  <div class="glyph-ring ring-3"></div>
+
+  <div class="particles" id="particles"></div>
+
+  <span class="hero-symbol">𓂀</span>
+  <p class="hero-eyebrow">The Hidden Axis — Arc I</p>
+  <h1 class="hero-title">
+    Spirit<span class="gold"> Majic</span>
+  </h1>
+  <p class="hero-subtitle">Clans of the Hidden Axis</p>
+  <p class="hero-tagline">"Every spirit remembers. Every secret has a cost."</p>
+
+  <div class="hero-cta">
+    <a href="#world" class="btn-primary">Enter the World</a>
+    <a href="#characters" class="btn-secondary">Meet the Pack</a>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Descend</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+<div class="glyph-divider">✦ ✦ ✦</div>
+
+<!-- ── WORLD ── -->
+<section id="world">
+  <div class="world-grid">
+    <div class="world-text reveal">
+      <span class="section-label">The Universe</span>
+      <h2 class="section-title">The World of<br><span class="accent">Yun-Ka Teru</span></h2>
+      <p>In a world where spiritual energy is the ultimate currency, every human carries within them a <strong>Spirit SparC</strong> — a Spirit-Partition-Resonance-Catalyst. Those who ignite it become Spirit-Bound, tethered to a single Spirit Animal that amplifies their elemental power.</p>
+      <p>The Vael'Koth supercontinent stretches across the world like a four-pointed star, each arm home to an elemental nation locked in centuries of cold war. At its center lies the <strong>Spirit Scar</strong> — a glowing crater of ancient power that every nation wants to control.</p>
+      <blockquote class="pull-quote">"The Ankh'Yami Ka'Tet Wujiin are the Hidden Axis — the secret pivot point upon which the world's equilibrium rests."</blockquote>
+      <p>Hidden from all nations, operating from multi-dimensional sanctuaries, the Ankh'Yami clan stands as the world's invisible balance. They are the jailers of the Spirit Scar. And their chosen heir has just broken every law of nature.</p>
+    </div>
+    <div class="world-stats reveal">
+      <div class="stat-card">
+        <span class="stat-val">8B</span>
+        <span class="stat-label">World Population</span>
+        <p class="stat-detail">Spread across four elemental nations on the Vael'Koth continent</p>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">500M</span>
+        <span class="stat-label">Spirit Majic Users</span>
+        <p class="stat-detail">~6.25% of the population — the Spirit-Bound warrior class</p>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">52,000</span>
+        <span class="stat-label">Spirit Animal Bearers</span>
+        <p class="stat-detail">Elite — only 0.00065% bond with a full Spirit Animal</p>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">1</span>
+        <span class="stat-label">Twin Horizon</span>
+        <p class="stat-detail">Yong' Kheru — the only person in recorded history bonded to two Spirit Animals simultaneously</p>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">5</span>
+        <span class="stat-label">Elemental Clans</span>
+        <p class="stat-detail">Ka'Rai · Mizuchi · Tian'Feng · Doro · Ankh'Yami</p>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">7</span>
+        <span class="stat-label">Story Arcs</span>
+        <p class="stat-detail">From The Hidden Bloodline to Wujiin: Wrath of the First Spirits</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── NATIONS ── -->
+<section id="nations">
+  <div class="nations-header reveal">
+    <span class="section-label">The Five Powers</span>
+    <h2 class="section-title">The Elemental <span class="accent">Nations</span></h2>
+  </div>
+
+  <div class="nations-scroll">
+    <div class="nation-card nation-karai reveal">
+      <span class="nation-icon">🔥</span>
+      <h3 class="nation-name">Ka'Rai</h3>
+      <p class="nation-element">Fire · Industry · Conquest</p>
+      <p class="nation-desc">The Pyreforge Dominion. Industrial gothic fortress-cities shrouded in ash clouds and ember rain. A nation that forged its ambition in obsidian and fire — militarized, aggressive, relentless.</p>
+      <span class="nation-style">The Iron-Pulse Style</span>
+    </div>
+    <div class="nation-card nation-mizuchi reveal">
+      <span class="nation-icon">🌊</span>
+      <h3 class="nation-name">Mizuchi</h3>
+      <p class="nation-element">Water · Memory · Illusion</p>
+      <p class="nation-desc">The Tidal Dynasty. A spiral archipelago of turquoise reefs and deep-ocean politics. Masters of memory, illusion, and the prismatic flow — they see what others cannot.</p>
+      <span class="nation-style">The Mirror-Walk Style</span>
+    </div>
+    <div class="nation-card nation-tianfeng reveal">
+      <span class="nation-icon">⚡</span>
+      <h3 class="nation-name">Tian'Feng</h3>
+      <p class="nation-element">Air · Speed · Surveillance</p>
+      <p class="nation-desc">The Sky Empire. White mountain peaks and stacked floating islands. They move at the speed of thought, commanding surveillance and flight — their strikes arrive before their presence is sensed.</p>
+      <span class="nation-style">The Sonic-Whip Style</span>
+    </div>
+    <div class="nation-card nation-doro reveal">
+      <span class="nation-icon">⛰️</span>
+      <h3 class="nation-name">Doro</h3>
+      <p class="nation-element">Earth · Defense · Endurance</p>
+      <p class="nation-desc">The Earth Plateau. Vast brown highlands, emerald crystal groves, and stone canyons carved by centuries of geological power. Builders and defenders who outlast every storm.</p>
+      <span class="nation-style">The Forge-Beat</span>
+    </div>
+    <div class="nation-card nation-ankh reveal">
+      <span class="nation-icon">𓂀</span>
+      <h3 class="nation-name">Ankh'Yami</h3>
+      <p class="nation-element">Equilibrium · Spirit · The Hidden</p>
+      <p class="nation-desc">The Hidden Axis. Existing between dimensions, unseeable by the world's powers. Keepers of the Spirit Scar. The clan that maintains global balance — and the clan that birthed the Twin Horizon.</p>
+      <span class="nation-style">Full Circuit Mastery</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+<div class="glyph-divider">✦ ✦ ✦</div>
+
+<!-- ── CHARACTERS ── -->
+<section id="characters">
+  <div class="char-header reveal">
+    <span class="section-label">The Vanguard</span>
+    <h2 class="section-title">The <span class="accent">Pack</span></h2>
+    <p style="color:rgba(240,238,221,0.5); max-width:600px; font-size:1rem; margin-top:1rem;">Four warriors bound by destiny, forged by loss, and chosen by their spirits. Not a team — a found family.</p>
+  </div>
+
+  <div class="characters-grid">
+
+    <!-- KHERU -->
+    <div class="char-card char-kheru reveal">
+      <div class="char-glow"></div>
+      <div class="char-number">I</div>
+      <p class="char-title-label">The Twin Horizon</p>
+      <h3 class="char-name">Yong' Kheru<br>Ankh'Yami Ka'Tet Wujiin</h3>
+      <p class="char-alias">"Heir of Equilibrium"</p>
+      <div class="char-meta">
+        <div class="char-meta-item"><span>Age</span><span>17</span></div>
+        <div class="char-meta-item"><span>Role</span><span>Spiritual Heir / Balance Keeper</span></div>
+        <div class="char-meta-item"><span>Clan</span><span>Ankh'Yami</span></div>
+      </div>
+      <div class="char-spirit">
+        <p class="char-spirit-label">Spirit Animals</p>
+        <p class="char-spirit-name">Sa'Fyn — The Winged Horizon &nbsp;·&nbsp; Sol'Vahr — The Voidbound Shadow Wolf</p>
+      </div>
+      <p class="char-desc">The only person in recorded history to bond with two Spirit Animals simultaneously — a golden falcon and a shadow wolf. His dual bond marks him as the prophesied Twin Horizon. Vanta-black hair laced with golden strands, eyes of royal blue with golden-void flares. Born of grief at age ten, forged through duality, the living junction of dawn and dusk.</p>
+      <div class="char-abilities">
+        <span class="ability-tag">Falcon Flow</span>
+        <span class="ability-tag">Void Fang</span>
+        <span class="ability-tag">Eclipture Form</span>
+        <span class="ability-tag">Equilibrium Breaker</span>
+        <span class="ability-tag">Twin Blades: Solstice & Eclipse</span>
+      </div>
+    </div>
+
+    <!-- LI'ZAHRA -->
+    <div class="char-card char-lizahra reveal">
+      <div class="char-glow"></div>
+      <div class="char-number">II</div>
+      <p class="char-title-label">The Blooming Sanctuary</p>
+      <h3 class="char-name">Li'Zahra<br>Yami Wujiin</h3>
+      <p class="char-alias">"The Heart of the Pack"</p>
+      <div class="char-meta">
+        <div class="char-meta-item"><span>Age</span><span>18</span></div>
+        <div class="char-meta-item"><span>Role</span><span>Support Healer / Spiritual Guardian</span></div>
+        <div class="char-meta-item"><span>Clan</span><span>Ankh'Yami (found family)</span></div>
+      </div>
+      <div class="char-spirit">
+        <p class="char-spirit-label">Spirit Animal</p>
+        <p class="char-spirit-name">Aquatic Sprite — Bioluminescent empathic tide being</p>
+      </div>
+      <p class="char-desc">Sweet, kind, nurturing — and far more powerful than she appears. A master of aura harmonization, life-force restoration, and protective wards. Her empathic resonance with Yong'Kheru uniquely amplifies her abilities in his presence. Shy around strangers, radiant with those she loves. Can become a fighter when her pack is threatened.</p>
+      <div class="char-abilities">
+        <span class="ability-tag">Aura Harmonization</span>
+        <span class="ability-tag">Life-Force Restoration</span>
+        <span class="ability-tag">Protective Wards</span>
+        <span class="ability-tag">Empathic Resonance</span>
+        <span class="ability-tag">Tidal Shields</span>
+      </div>
+    </div>
+
+    <!-- KAIRO -->
+    <div class="char-card char-kairo reveal">
+      <div class="char-glow"></div>
+      <div class="char-number">III</div>
+      <p class="char-title-label">The Unbreakable Fang</p>
+      <h3 class="char-name">Kairo<br>Ankh'Yami Ka'Tet Wujiin</h3>
+      <p class="char-alias">"The Gravity Tank"</p>
+      <div class="char-meta">
+        <div class="char-meta-item"><span>Role</span><span>Guardian / Front-Line Combat</span></div>
+        <div class="char-meta-item"><span>Element</span><span>Earth / Gravity</span></div>
+        <div class="char-meta-item"><span>Clan</span><span>Ankh'Yami</span></div>
+      </div>
+      <div class="char-spirit">
+        <p class="char-spirit-label">Spirit Animal</p>
+        <p class="char-spirit-name">The Great Bear — Titan of earth and unstoppable force</p>
+      </div>
+      <p class="char-desc">Loyal to a fault and the physically strongest of the pack. Sworn brother to Kheru — their trust is absolute (100/100). His journey is learning that wisdom must match strength. The comedy that lands because of genuine heart. Stances that make the ground bend around him.</p>
+      <div class="char-abilities">
+        <span class="ability-tag">Gravity Warping</span>
+        <span class="ability-tag">Earth Dominion</span>
+        <span class="ability-tag">Bear Form Surge</span>
+        <span class="ability-tag">Unbreakable Defense</span>
+        <span class="ability-tag">Seismic Impact</span>
+      </div>
+    </div>
+
+    <!-- NA'VEEN -->
+    <div class="char-card char-naveen reveal">
+      <div class="char-glow"></div>
+      <div class="char-number">IV</div>
+      <p class="char-title-label">The Whispered Blade</p>
+      <h3 class="char-name">Na'Veen<br>Ankh'Yami Ka'Tet Wujiin</h3>
+      <p class="char-alias">"The Emotional Assassin"</p>
+      <div class="char-meta">
+        <div class="char-meta-item"><span>Role</span><span>Stealth Assassin / Emotional Sensor</span></div>
+        <div class="char-meta-item"><span>Element</span><span>Water / Shadow / Void</span></div>
+        <div class="char-meta-item"><span>Clan</span><span>Ankh'Yami</span></div>
+      </div>
+      <div class="char-spirit">
+        <p class="char-spirit-label">Spirit Animal</p>
+        <p class="char-spirit-name">Sa'Ruun — The Cuttlefish of Shifting Truths</p>
+      </div>
+      <p class="char-desc">Ballerina-assassin hybrid. Deep Chestnut hair with honey highlights, eyes that shift gold-to-silver based on perceived intent. Butterfly locs that move like tentacles when her spirit activates. Cool factor hiding deep vulnerability. A fractured history that turns every mission personal.</p>
+      <div class="char-abilities">
+        <span class="ability-tag">Veil Shift</span>
+        <span class="ability-tag">Emotional Sensing</span>
+        <span class="ability-tag">Bioluminescent Camouflage</span>
+        <span class="ability-tag">Frequency Disruption</span>
+        <span class="ability-tag">Phantom Strike</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── ARCS ── -->
+<section id="arcs">
+  <div class="arcs-inner">
+    <div class="arcs-header reveal">
+      <span class="section-label">The Seven Arcs</span>
+      <h2 class="section-title">The <span class="accent">Seasonal Architecture</span></h2>
+      <p style="color:rgba(240,238,221,0.45); max-width:600px; margin:1rem auto 0; font-size:1rem;">From a hidden bloodline to the wrath of the First Spirits — the complete story arc of Yong' Kheru's destiny.</p>
+    </div>
+
+    <div class="arcs-timeline reveal">
+
+      <div class="arc-item">
+        <div class="arc-dot"></div>
+        <div class="arc-number-wrapper"><span class="arc-number">I</span></div>
+        <div class="arc-content">
+          <p class="arc-tag">Arc 1 · Deep Crimson</p>
+          <h3 class="arc-name">The Hidden Bloodline</h3>
+          <p class="arc-tagline">"Every secret has a spirit. Every spirit remembers."</p>
+          <p class="arc-desc">Introduction to Yong' Kheru and the quartet. The Rite of the First Bond. Kheru's dual-spirit surge shatters the ancestral monolith — sending shockwaves across all five nations.</p>
+          <p class="arc-reveal">↳ The Reveal: Kheru carries a bloodline thought to be extinct.</p>
+        </div>
+      </div>
+
+      <div class="arc-item">
+        <div class="arc-dot"></div>
+        <div class="arc-number-wrapper"><span class="arc-number">II</span></div>
+        <div class="arc-content">
+          <p class="arc-tag">Arc 2 · Blue-White</p>
+          <h3 class="arc-name">Spiritforge: The Weapons Within</h3>
+          <p class="arc-tagline">"Break the wound. Forge the weapon."</p>
+          <p class="arc-desc">The Spirit-Weapon system is unveiled. The forging of the Gravemaul and the Luminous Lash. The pack learns that their wounds are not scars — they are blueprints.</p>
+          <p class="arc-reveal">↳ The Reveal: Spirit Animals are not just companions; they are the blueprints for living weapons.</p>
+        </div>
+      </div>
+
+      <div class="arc-item">
+        <div class="arc-dot"></div>
+        <div class="arc-number-wrapper"><span class="arc-number">III</span></div>
+        <div class="arc-content">
+          <p class="arc-tag">Arc 3 · Violet</p>
+          <h3 class="arc-name">Wounds That Shape the Spirit</h3>
+          <p class="arc-tagline">"Pain is the path. Spirit is the destination."</p>
+          <p class="arc-desc">Generational trauma and the Spirit Scar. The discovery of the Void-Bleed at the Ruins of the First Man. A revelation that tears the pack apart before it forces them deeper together.</p>
+          <p class="arc-reveal">↳ The Reveal: Kheru's mother didn't just die — she was betrayed by the very Axis she tried to save.</p>
+        </div>
+      </div>
+
+      <div class="arc-item">
+        <div class="arc-dot"></div>
+        <div class="arc-number-wrapper"><span class="arc-number">IV</span></div>
+        <div class="arc-content">
+          <p class="arc-tag">Arc 4 · Black + Gold</p>
+          <h3 class="arc-name">Clans of the Hidden Axis</h3>
+          <p class="arc-tagline">"Balance is not peace. Balance is power."</p>
+          <p class="arc-desc">Political warfare at its apex. The Diplomatic Summit. Lady Suiren and the Traitor Elders begin their move. The Hidden Axis is revealed to be something far more ancient — and far more dangerous — than a clan.</p>
+          <p class="arc-reveal">↳ The Reveal: The "Axis" is not a place, but a network of families controlling the world's energy.</p>
+        </div>
+      </div>
+
+      <div class="arc-item">
+        <div class="arc-dot"></div>
+        <div class="arc-number-wrapper"><span class="arc-number">V</span></div>
+        <div class="arc-content">
+          <p class="arc-tag">Arc 5 · Black + Deep Purple</p>
+          <h3 class="arc-name">Shadow of the Axis</h3>
+          <p class="arc-tagline">"Light reveals nothing. Shadows reveal the truth."</p>
+          <p class="arc-desc">The 72-Hour Convergence begins. Activation of the Mirror Seals. The Spirit Breaker is launched. The world's hidden architecture begins to collapse inward.</p>
+          <p class="arc-reveal">↳ The Reveal: The Ka'Rai grounds are built upon the bones of the First Spirits.</p>
+        </div>
+      </div>
+
+      <div class="arc-item">
+        <div class="arc-dot"></div>
+        <div class="arc-number-wrapper"><span class="arc-number">VI</span></div>
+        <div class="arc-content">
+          <p class="arc-tag">Arc 6 · Dark Gold</p>
+          <h3 class="arc-name">Bloodline of the Hidden</h3>
+          <p class="arc-tagline">"What is hidden must rise."</p>
+          <p class="arc-desc">Revelation and the collapse of the Council. The Gauntlet of the Traitor Elders. The true origin of the Wujiin line is exposed — and why the world was right to fear their Wrath.</p>
+          <p class="arc-reveal">↳ The Reveal: The Wujiin bloodline was never just a clan. It was a covenant with the First Flame.</p>
+        </div>
+      </div>
+
+      <div class="arc-item">
+        <div class="arc-dot"></div>
+        <div class="arc-number-wrapper"><span class="arc-number">VII</span></div>
+        <div class="arc-content">
+          <p class="arc-tag">Arc 7 · White-Hot</p>
+          <h3 class="arc-name">Wujiin: Wrath of the First Spirits</h3>
+          <p class="arc-tagline">"Before the first clan… there was fire."</p>
+          <p class="arc-desc">The Apocalypse and Rebirth. The First Flame awakens. Spirit-gods descend. Kheru must become the Equilibrium Breaker — judge of the world and of the spirits themselves.</p>
+          <p class="arc-reveal">↳ The Reveal: The First Flame is sentient. It wants to be free of all the clans.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+<div class="glyph-divider">✦ ✦ ✦</div>
+
+<!-- ── POWER SYSTEM ── -->
+<section id="power">
+  <div class="reveal">
+    <span class="section-label">The Mechanics</span>
+    <h2 class="section-title">The <span class="accent">Spirit Majic</span> System</h2>
+    <p style="color:rgba(240,238,221,0.5); max-width:650px; font-size:1rem; margin-top:1rem;">Spirit Majic is not a gift. It is the mastery of internal frequency — the biological, neurological, and spiritual architecture that separates the Spirit-Bound from the ordinary world.</p>
+  </div>
+
+  <div class="power-grid">
+
+    <div class="power-card reveal">
+      <span class="power-icon">⚡</span>
+      <h3 class="power-name">The Spirit SparC</h3>
+      <p class="power-subtitle">Spirit-Partition-Resonance-Catalyst</p>
+      <p class="power-desc">The internal engine of all Spirit Majic. Dormant in every human — ignited only by extreme emotional trauma (the Combustion moment). Once lit, the Vertical Circuit activates and a Spirit Animal bond is forged.</p>
+    </div>
+
+    <div class="power-card reveal">
+      <span class="power-icon">🧬</span>
+      <h3 class="power-name">The Vertical Circuit</h3>
+      <p class="power-subtitle">The Biological Path</p>
+      <p class="power-desc">Spirit energy flows through three points: the Pineal Ignition (insight, perception), the Spine Conductor (amplification), and the Solar Furnace (output, manifestation). Trauma or Spirit-Blocks cause physical pain along the circuit.</p>
+    </div>
+
+    <div class="power-card reveal">
+      <span class="power-icon">🐾</span>
+      <h3 class="power-name">The Law of the Taming</h3>
+      <p class="power-subtitle">The Spirit Bond</p>
+      <p class="power-desc">Every Spirit-Bound must dominate their Spirit Animal through the Willpower Constant. Harmonized flow grants the animal's Frequency. If willpower falters — the animal's primal instinct floods the host, triggering the Vengeful Transition.</p>
+    </div>
+
+    <div class="power-card reveal">
+      <span class="power-icon">⚔️</span>
+      <h3 class="power-name">Six Modes of Manifestation</h3>
+      <p class="power-subtitle">Combat Framework</p>
+      <p class="power-desc">Sixth Sense · Physical Enhancement · Elemental Projection · Weapon Manifestation · Domain Expansion · and Full Circuit Mastery. A warrior creates Spirit Majic by manipulating where energy rests within the Vertical Circuit.</p>
+    </div>
+
+    <div class="power-card reveal">
+      <span class="power-icon">🌀</span>
+      <h3 class="power-name">The Twin Horizon Anomaly</h3>
+      <p class="power-subtitle">The Violation</p>
+      <p class="power-desc">Yong' Kheru hosts two Spirit Animals within one Vertical Circuit — a biological impossibility. He must maintain two separate Taming constants simultaneously. If one spirit begins the Vengeful Transition, it triggers the other. He would become a Dual-Revenant — a Tier-0 threat capable of leveling mountain ranges.</p>
+    </div>
+
+    <div class="power-card reveal">
+      <span class="power-icon">🔮</span>
+      <h3 class="power-name">Circuit Scarring (Zenkai)</h3>
+      <p class="power-subtitle">Growth Through Damage</p>
+      <p class="power-desc">When a Spirit-Bound's circuit is severely damaged and heals, it rebuilds stronger. This Zenkai Capability — growth through breaking — is what separates legends from warriors. The wound remembers. The spirit ascends.</p>
+    </div>
+
+    <!-- Tier bar -->
+    <div class="sparc-tiers reveal">
+      <div class="tier">
+        <p class="tier-name">Ordinary</p>
+        <p class="tier-users">~7.5B</p>
+        <p class="tier-desc">No ignition — SparC dormant</p>
+      </div>
+      <div class="tier">
+        <p class="tier-name">Spirit-Bound</p>
+        <p class="tier-users">~500M</p>
+        <p class="tier-desc">Ignited SparC, elemental access</p>
+      </div>
+      <div class="tier">
+        <p class="tier-name">Spirit Bearer</p>
+        <p class="tier-users">~52,000</p>
+        <p class="tier-desc">Full Spirit Animal bond</p>
+      </div>
+      <div class="tier">
+        <p class="tier-name">Elder Tier</p>
+        <p class="tier-users">~200</p>
+        <p class="tier-desc">Domain-level mastery</p>
+      </div>
+      <div class="tier">
+        <p class="tier-name">Twin Horizon</p>
+        <p class="tier-users">1</p>
+        <p class="tier-desc">Dual-bonded anomaly — unprecedented</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── PITCH ── -->
+<section id="pitch">
+  <div class="pitch-bg"></div>
+  <div class="pitch-inner reveal">
+    <span class="pitch-quote-mark">"</span>
+    <p class="pitch-text">A teenager awakens with two Spirit Animals in a world where everyone gets one — making him either humanity's savior or its destroyer, as four elemental nations race toward war over an ancient sealed power.</p>
+    <p class="pitch-comparison">Avatar: The Last Airbender · Jujutsu Kaisen · Game of Thrones</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div>
+    <p class="footer-logo">Spirit Majic</p>
+    <p class="footer-tagline">"Balance isn't the absence of chaos — it's walking through it without falling."</p>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#world">The World</a></li>
+    <li><a href="#characters">The Pack</a></li>
+    <li><a href="#arcs">The Arcs</a></li>
+    <li><a href="#power">Power System</a></li>
+  </ul>
+  <div class="footer-copy">
+    <p>Spirit Majic™ · Clans of the Hidden Axis</p>
+    <p style="margin-top:0.3rem">All Rights Reserved · Original IP</p>
+  </div>
+</footer>
+
+<script>
+  // ── Particle generator ──
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = Math.random() * 30 + '%';
+    p.style.animationDuration = (4 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 6) + 's';
+    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+    if (Math.random() > 0.5) p.style.background = '#8B0000';
+    container.appendChild(p);
+  }
+
+  // ── Scroll reveal ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── Sticky nav background ──
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.background = window.scrollY > 80
+      ? 'rgba(5,5,8,0.97)'
+      : 'linear-gradient(180deg, rgba(5,5,8,0.97) 0%, transparent 100%)';
+  });
+</script>
+</body>
+</html>
